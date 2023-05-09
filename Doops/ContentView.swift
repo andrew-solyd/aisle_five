@@ -125,6 +125,7 @@ struct ContentView: View {
                 TextEditor(text: $userInput)
                     .frame(height: 80)
                     .padding(.horizontal)
+                    .background(Color.blue.opacity(0.2))
                     .foregroundColor(.black)
                     .font(.body)
                     .opacity(userInput.isEmpty ? 0.25 : 1)
@@ -254,6 +255,7 @@ struct ContentView: View {
                 }
             }
         }
+        .background(Color.white)
     }
 }
 
