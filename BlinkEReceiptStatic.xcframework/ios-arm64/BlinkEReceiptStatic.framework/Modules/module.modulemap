@@ -1,0 +1,6 @@
+framework module BlinkEReceiptStatic {
+  umbrella header "BlinkEReceiptStatic.h"
+
+  export *
+  module * { export * }
+}

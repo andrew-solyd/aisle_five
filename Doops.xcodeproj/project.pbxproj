@@ -7,15 +7,43 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		3F1037992A008DAF00336E69 /* AccountLinkingManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F1037982A008DAF00336E69 /* AccountLinkingManager.swift */; };
 		3F606F052A005D9A0054331B /* DoopsApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F606F042A005D9A0054331B /* DoopsApp.swift */; };
 		3F606F072A005D9A0054331B /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F606F062A005D9A0054331B /* ContentView.swift */; };
 		3F606F092A005D9B0054331B /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 3F606F082A005D9B0054331B /* Assets.xcassets */; };
 		3F606F0C2A005D9B0054331B /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 3F606F0B2A005D9B0054331B /* Preview Assets.xcassets */; };
 		3F606F0E2A005D9B0054331B /* Persistence.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F606F0D2A005D9B0054331B /* Persistence.swift */; };
 		3F606F112A005D9B0054331B /* Doops.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 3F606F0F2A005D9B0054331B /* Doops.xcdatamodeld */; };
+		3F606F1B2A005DE00054331B /* BlinkReceiptStatic.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3F606F192A005DDE0054331B /* BlinkReceiptStatic.xcframework */; };
+		3F606F1C2A005DE00054331B /* BlinkReceiptStatic.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 3F606F192A005DDE0054331B /* BlinkReceiptStatic.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		3F606F242A00624B0054331B /* BlinkEReceiptStatic.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3F606F202A0062450054331B /* BlinkEReceiptStatic.xcframework */; };
+		3F606F252A00624B0054331B /* BlinkEReceiptStatic.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 3F606F202A0062450054331B /* BlinkEReceiptStatic.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		3F606F262A00624C0054331B /* AccountLinking.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3F606F1F2A0062450054331B /* AccountLinking.xcframework */; };
+		3F606F272A00624C0054331B /* AccountLinking.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 3F606F1F2A0062450054331B /* AccountLinking.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		3F606F282A00624E0054331B /* MailCore.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3F606F1E2A0062450054331B /* MailCore.xcframework */; };
+		3F606F292A00624E0054331B /* MailCore.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 3F606F1E2A0062450054331B /* MailCore.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		3FD6B19C2A00B109004B1F33 /* APIClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FD6B19B2A00B109004B1F33 /* APIClient.swift */; };
 /* End PBXBuildFile section */
 
+/* Begin PBXCopyFilesBuildPhase section */
+		3F606F1D2A005DE00054331B /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				3F606F272A00624C0054331B /* AccountLinking.xcframework in Embed Frameworks */,
+				3F606F1C2A005DE00054331B /* BlinkReceiptStatic.xcframework in Embed Frameworks */,
+				3F606F252A00624B0054331B /* BlinkEReceiptStatic.xcframework in Embed Frameworks */,
+				3F606F292A00624E0054331B /* MailCore.xcframework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
+		3F1037982A008DAF00336E69 /* AccountLinkingManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountLinkingManager.swift; sourceTree = "<group>"; };
 		3F606F012A005D9A0054331B /* Doops.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Doops.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		3F606F042A005D9A0054331B /* DoopsApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DoopsApp.swift; sourceTree = "<group>"; };
 		3F606F062A005D9A0054331B /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -23,6 +51,11 @@
 		3F606F0B2A005D9B0054331B /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		3F606F0D2A005D9B0054331B /* Persistence.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Persistence.swift; sourceTree = "<group>"; };
 		3F606F102A005D9B0054331B /* Doops.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Doops.xcdatamodel; sourceTree = "<group>"; };
+		3F606F192A005DDE0054331B /* BlinkReceiptStatic.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; path = BlinkReceiptStatic.xcframework; sourceTree = "<group>"; };
+		3F606F1E2A0062450054331B /* MailCore.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; path = MailCore.xcframework; sourceTree = "<group>"; };
+		3F606F1F2A0062450054331B /* AccountLinking.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; path = AccountLinking.xcframework; sourceTree = "<group>"; };
+		3F606F202A0062450054331B /* BlinkEReceiptStatic.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; path = BlinkEReceiptStatic.xcframework; sourceTree = "<group>"; };
+		3FD6B19B2A00B109004B1F33 /* APIClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIClient.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -30,6 +63,10 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3F606F1B2A005DE00054331B /* BlinkReceiptStatic.xcframework in Frameworks */,
+				3F606F262A00624C0054331B /* AccountLinking.xcframework in Frameworks */,
+				3F606F242A00624B0054331B /* BlinkEReceiptStatic.xcframework in Frameworks */,
+				3F606F282A00624E0054331B /* MailCore.xcframework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -39,6 +76,10 @@
 		3F606EF82A005D9A0054331B = {
 			isa = PBXGroup;
 			children = (
+				3F606F192A005DDE0054331B /* BlinkReceiptStatic.xcframework */,
+				3F606F1F2A0062450054331B /* AccountLinking.xcframework */,
+				3F606F202A0062450054331B /* BlinkEReceiptStatic.xcframework */,
+				3F606F1E2A0062450054331B /* MailCore.xcframework */,
 				3F606F032A005D9A0054331B /* Doops */,
 				3F606F022A005D9A0054331B /* Products */,
 			);
@@ -56,6 +97,8 @@
 			isa = PBXGroup;
 			children = (
 				3F606F042A005D9A0054331B /* DoopsApp.swift */,
+				3F1037982A008DAF00336E69 /* AccountLinkingManager.swift */,
+				3FD6B19B2A00B109004B1F33 /* APIClient.swift */,
 				3F606F062A005D9A0054331B /* ContentView.swift */,
 				3F606F082A005D9B0054331B /* Assets.xcassets */,
 				3F606F0D2A005D9B0054331B /* Persistence.swift */,
@@ -83,6 +126,7 @@
 				3F606EFD2A005D9A0054331B /* Sources */,
 				3F606EFE2A005D9A0054331B /* Frameworks */,
 				3F606EFF2A005D9A0054331B /* Resources */,
+				3F606F1D2A005DE00054331B /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
@@ -146,7 +190,9 @@
 				3F606F0E2A005D9B0054331B /* Persistence.swift in Sources */,
 				3F606F072A005D9A0054331B /* ContentView.swift in Sources */,
 				3F606F052A005D9A0054331B /* DoopsApp.swift in Sources */,
+				3F1037992A008DAF00336E69 /* AccountLinkingManager.swift in Sources */,
 				3F606F112A005D9B0054331B /* Doops.xcdatamodeld in Sources */,
+				3FD6B19C2A00B109004B1F33 /* APIClient.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -278,6 +324,8 @@
 				DEVELOPMENT_TEAM = WQ2P89MQU3;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = Solydaria;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.shopping";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -288,7 +336,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = Solydaria.Doops;
+				PRODUCT_BUNDLE_IDENTIFIER = Solydaria.ShopGPTApp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -307,6 +355,8 @@
 				DEVELOPMENT_TEAM = WQ2P89MQU3;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = Solydaria;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.shopping";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -317,7 +367,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = Solydaria.Doops;
+				PRODUCT_BUNDLE_IDENTIFIER = Solydaria.ShopGPTApp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
