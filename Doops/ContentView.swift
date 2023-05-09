@@ -118,15 +118,16 @@ struct ContentView: View {
                     .stroke(Color.gray.opacity(0.5), lineWidth: 1)
                     .frame(height: 80)
                     //.cornerRadius(8)
-                    .onTapGesture {
-                        isFocused = true
-                    }
+                    
+                    //.onTapGesture {
+                    //    isFocused = true
+                    //}
                 
                 TextEditor(text: $userInput)
                     .frame(height: 80)
                     .padding(.horizontal)
                     .background(Color.blue.opacity(0.2))
-                    .foregroundColor(.black)
+                    .foregroundColor(.pink)
                     .font(.body)
                     .opacity(userInput.isEmpty ? 0.25 : 1)
                     .overlay(Text("Enter GPT prompt here")
