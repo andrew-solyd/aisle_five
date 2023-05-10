@@ -22,6 +22,9 @@ extension Color {
 
 struct ContentView: View {
     
+    let accountLinkingManager = AccountLinkingManager()
+    let _userMessage = userMessage()
+    
     @State private var textFieldText = ""
     @State private var userInput: String = ""
     @State private var conversation: [Message] = []
@@ -29,9 +32,13 @@ struct ContentView: View {
     @State var isLinked: Bool = false
     @State var isButtonDisabled = false
     @FocusState private var isFocused: Bool
+    @State private var isWaitingForResponse: Bool = false
+    @State private var dotCount: Int = 0
+    @State private var waitingMessageIndex: Int? = nil
+    @State var isUploaded: Bool = false
     
-    let accountLinkingManager = AccountLinkingManager()
-    let _userMessage = userMessage()
+    let timer = Timer.publish(every: 0.5, on: .main, in: .common).autoconnect()
+    let semaphore = DispatchSemaphore(value: 1)
     
     var body: some View {
         VStack {
@@ -63,34 +70,44 @@ struct ContentView: View {
                     conversation.append(Message(text: "Extracting and syncing your purchase data.", isUserInput: false))
                     // action
                     accountLinkingManager.updateConnectionAndGrabOrders { (retailer, jsonString, ordersRemaining, viewController, error, sessionId) in
-                        if error == .none {
+                        
+                        // Try to acquire a permit. If none are available, this call will block until one becomes available.
+                        semaphore.wait()
+                        
+                        if error == .none && !isUploaded {
                             if let jsonString = jsonString {
                                 _userMessage.uploadPurchaseHistory(jsonString: jsonString) { (result) in
                                     switch result {
                                     case .success(let response):
                                         if !response.isEmpty {
                                             conversation.append(Message(text: response, isUserInput: false))
+                                            isUploaded = true
                                         }
                                     case .failure(let error):
                                         conversation.append(Message(text: "Failed to upload purchase history with error: \(error.localizedDescription)", isUserInput: false))
                                     }
+                                    // Release the permit back to the semaphore, unblocking a waiting `wait()` call if there is one.
+                                    semaphore.signal()
                                 }
                             } else {
-                                conversation.append(Message(text: "Failed to grab new orders.", isUserInput: false))
+                                print("nil order data, skipping")
+                                semaphore.signal()
                             }
                         } else {
                             conversation.append(Message(text: "Error encountered while grabbing orders.", isUserInput: false))
                             print(error)
+                            semaphore.signal()
                         }
                     }
                 }) {
-                    Text("Extract my data")
+                    Text("Sync my data")
                         .foregroundColor(.black)
                         .frame(minWidth: 120)
                         .font(.system(size: 12))
                 }
                 .buttonStyle(BorderedButtonStyle())
                 .border(Color.gray, width: 0.2)
+                .disabled(isUploaded)
             }
             ScrollViewReader { scrollViewProxy in
                 ScrollView {
@@ -139,36 +156,65 @@ struct ContentView: View {
             Spacer()
             Button {
                 if !userInput.isEmpty {
+                    isWaitingForResponse = true
+                    dotCount = 0
                     conversation.append(Message(text: userInput, isUserInput: true))
+                    waitingMessageIndex = conversation.endIndex
+                    conversation.append(Message(text: " ", isUserInput: false))
                     _userMessage.sendRequest(with: userInput) { result in
                         switch result {
                         case .success(let response):
-                            let trimmedResponse = response.trimmingCharacters(in: .whitespacesAndNewlines) // Remove newline character from response
-                            
-                            // Check for "#getDeals" in the response
-                            if let range = trimmedResponse.range(of: "#getDeals") {
-                                let messageWithoutSystemCommand = String(trimmedResponse[..<range.lowerBound])
-                                DispatchQueue.main.async {
-                                    conversation.append(Message(text: messageWithoutSystemCommand, isUserInput: false))
+                            DispatchQueue.main.async {
+                                if let index = self.waitingMessageIndex {
+                                    conversation.remove(at: index)
+                                    self.waitingMessageIndex = nil
                                 }
-                                // Call getDeals API
-                                _userMessage.getDeals { result in
-                                    switch result {
-                                    case .success(let dealsMessage):
-                                        DispatchQueue.main.async {
-                                            conversation.append(Message(text: dealsMessage, isUserInput: false))
-                                        }
-                                    case .failure(let error):
-                                        print("Error getting deals: \(error.localizedDescription)")
+                                let trimmedResponse = response.trimmingCharacters(in: .whitespacesAndNewlines) // Remove newline character from response
+                                
+                                // Check for "#getDeals" in the response
+                                if let range = trimmedResponse.range(of: "#getDeals") {
+                                    let messageWithoutSystemCommand = String(trimmedResponse[..<range.lowerBound])
+                                    DispatchQueue.main.async {
+                                        conversation.append(Message(text: messageWithoutSystemCommand, isUserInput: false))
                                     }
-                                }
-                            } else {
-                                DispatchQueue.main.async {
-                                    conversation.append(Message(text: trimmedResponse, isUserInput: false))
+                                    // Call getDeals API
+                                    isWaitingForResponse = true
+                                    dotCount = 0
+                                    waitingMessageIndex = conversation.endIndex
+                                    conversation.append(Message(text: "", isUserInput: false))
+                                    _userMessage.getDeals { result in
+                                        DispatchQueue.main.async {
+                                            if let index = self.waitingMessageIndex {
+                                                conversation.remove(at: index)
+                                                self.waitingMessageIndex = nil
+                                            }
+                                            switch result {
+                                            case .success(let dealsMessage):
+                                                DispatchQueue.main.async {
+                                                    conversation.append(Message(text: dealsMessage, isUserInput: false))
+                                                }
+                                            case .failure(let error):
+                                                print("Error getting deals: \(error.localizedDescription)")
+                                            }
+                                        }
+                                        isWaitingForResponse = false
+                                    }
+                                } else {
+                                    DispatchQueue.main.async {
+                                        conversation.append(Message(text: trimmedResponse, isUserInput: false))
+                                    }
+                                    isWaitingForResponse = false
                                 }
                             }
                         case .failure(let error):
-                            conversation.append(Message(text: error.localizedDescription, isUserInput: false))
+                            DispatchQueue.main.async {
+                                if let index = self.waitingMessageIndex {
+                                    conversation.remove(at: index)
+                                    self.waitingMessageIndex = nil
+                                }
+                                conversation.append(Message(text: error.localizedDescription, isUserInput: false))
+                            }
+                            isWaitingForResponse = false
                         }
                     }
                     userInput = ""
@@ -180,52 +226,12 @@ struct ContentView: View {
             .disabled(userInput.isEmpty)
             .accentColor(userInput.isEmpty ? .gray : .textColor)
             Spacer(minLength: 10)
-            /*
-            HStack {
-                Button(action: {
-                    // Action for checking retailer
-                    print("Check Retailer button tapped")
-                    let linkedRetailers = accountLinkingManager.getLinkedRetailers()
-                    let message = linkedRetailers.map { "\($0)" }.joined(separator: ", ")
-                    conversation.append(Message(text: message, isUserInput: false))
-                }) {
-                    Text("Check Retailer")
-                }
-                
-                Spacer()
-                
-                Button(action: {
-                    // Action for getting orders
-                    print("Get Orders button tapped")
-                    accountLinkingManager.updateConnectionAndGrabOrders { (retailer, jsonString, ordersRemaining, viewController, error, sessionId) in
-                        if error == .none {
-                            if let jsonString = jsonString {
-                                _userMessage.uploadPurchaseHistory(jsonString: jsonString) { (result) in
-                                    switch result {
-                                    case .success(let response):
-                                        if !response.isEmpty {
-                                            conversation.append(Message(text: response, isUserInput: false))
-                                        }
-                                    case .failure(let error):
-                                        conversation.append(Message(text: "Failed to upload purchase history with error: \(error.localizedDescription)", isUserInput: false))
-                                    }
-                                }
-                            } else {
-                                conversation.append(Message(text: "Failed to grab new orders.", isUserInput: false))
-                            }
-                        } else {
-                            conversation.append(Message(text: "Error encountered while grabbing orders.", isUserInput: false))
-                            print(error)
-                        }
-                    }
-                }) {
-                    Text("Get Orders")
-                }
-            }
-            .padding(.horizontal)
-             */
         }
         .onAppear {
+            let linkedRetailers = accountLinkingManager.getLinkedRetailers()
+            if linkedRetailers.contains(52) {
+                isLinked = true
+            }
             _userMessage.resetAgent { result in
                     switch result {
                     case .success(let message):
@@ -237,14 +243,39 @@ struct ContentView: View {
                         print("Error resetting agent: \(error.localizedDescription)")
                     }
                 }
+            isWaitingForResponse = true
+            dotCount = 0
+            waitingMessageIndex = conversation.endIndex
+            conversation.append(Message(text: "", isUserInput: false))
             _userMessage.initializeAgent { result in
-                switch result {
-                case .success(let message):
-                    DispatchQueue.main.async {
-                        conversation.append(Message(text: message, isUserInput: false))
+                DispatchQueue.main.async {
+                    if let index = self.waitingMessageIndex {
+                        conversation.remove(at: index)
+                        self.waitingMessageIndex = nil
                     }
-                case .failure(let error):
-                    print("Error initializing agent: \(error.localizedDescription)")
+                    switch result {
+                    case .success(let message):
+                        DispatchQueue.main.async {
+                            conversation.append(Message(text: message, isUserInput: false))
+                        }
+                    case .failure(let error):
+                        print("Error initializing agent: \(error.localizedDescription)")
+                    }
+                }
+                isWaitingForResponse = false
+            }
+        }
+        .onReceive(timer) { _ in
+            if isWaitingForResponse {
+                // Check if the index is within the bounds of the array
+                if let index = self.waitingMessageIndex, index < conversation.count {
+                    let dots = String(repeating: ".", count: dotCount)
+                    conversation[index] = Message(text: " \(dots)", isUserInput: false)
+                    dotCount = (dotCount + 1) % 4
+                } else {
+                    // If the index is out of bounds, reset the waitingMessageIndex and start the animation over
+                    waitingMessageIndex = nil
+                    isWaitingForResponse = false
                 }
             }
         }

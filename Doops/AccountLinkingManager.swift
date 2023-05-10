@@ -12,6 +12,8 @@ class AccountLinkingManager {
     let manager: BRAccountLinkingManager
     let connection: BRAccountLinkingConnection
     
+    private var hasSuccessfullyGrabbedOrders = false
+    
     init() {
         manager = BRAccountLinkingManager.shared()
         connection = BRAccountLinkingConnection(retailer: BRAccountLinkingRetailer.wegmans, username: "yakovlev.andrei@gmail.com", password: "RD8hj5OFNYN^$=E")
@@ -58,12 +60,16 @@ class AccountLinkingManager {
     }
     
     func updateConnectionAndGrabOrders(completion: @escaping (BRAccountLinkingRetailer, String?, Int, UIViewController?, BRAccountLinkingError, String) -> Void) {
+        guard !hasSuccessfullyGrabbedOrders else {
+            print("Orders have already been grabbed in this session.")
+            return
+        }
         // Update connection with the latest configuration
         manager.update(connection)
         
         // Create a configuration object with your desired settings
         let config = BRAccountLinkingConfiguration()
-        config.dayCutoff = 10
+        config.dayCutoff = 15
         config.returnLatestOrdersOnly = false
         config.countryCode = "US"
         
@@ -77,7 +83,19 @@ class AccountLinkingManager {
         let _ = manager.grabNewOrders(for: retailer) { (retailer, results, ordersRemaining, viewController, error, sessionId) in
             if let results = results {
                 let jsonString = self.convertScanResultsToJSON(results: results)
-                completion(retailer, jsonString, ordersRemaining, viewController, error, sessionId)
+                // Determine the number of items in the JSON string
+                if let data = jsonString.data(using: .utf8), let jsonArray = try? JSONSerialization.jsonObject(with: data, options: []) as? [[String: Any]] {
+                    if jsonArray.count >= 20 {
+                        // Only complete if there are 20 items or more
+                        self.hasSuccessfullyGrabbedOrders = true
+                        completion(retailer, jsonString, ordersRemaining, viewController, error, sessionId)
+                    } else {
+                        print("Less than 20 items, not completing.")
+                        completion(retailer, nil, 0, viewController, .none, sessionId) // Feedback for not enough items
+                    }
+                } else {
+                    completion(retailer, jsonString, ordersRemaining, viewController, error, sessionId)
+                }
             } else {
                 completion(retailer, nil, ordersRemaining, viewController, error, sessionId)
             }
