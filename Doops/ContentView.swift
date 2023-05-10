@@ -152,13 +152,12 @@ struct ContentView: View {
                         case .success(let response):
                             let trimmedResponse = response.trimmingCharacters(in: .whitespacesAndNewlines) // Remove newline character from response
                             
-                            // Check for "@SYSTEM@ getDealsJSON" in the response
-                            if trimmedResponse.contains("@SYSTEM@ getDealsJSON") {
-                                let messageWithoutSystemCommand = trimmedResponse.replacingOccurrences(of: "@SYSTEM@ getDealsJSON", with: "")
+                            // Check for "#getDeals" in the response
+                            if let range = trimmedResponse.range(of: "#getDeals") {
+                                let messageWithoutSystemCommand = String(trimmedResponse[..<range.lowerBound])
                                 DispatchQueue.main.async {
                                     conversation.append(Message(text: messageWithoutSystemCommand, isUserInput: false))
                                 }
-                                
                                 // Call getDeals API
                                 _userMessage.getDeals { result in
                                     switch result {
