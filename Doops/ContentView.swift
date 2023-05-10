@@ -12,6 +12,12 @@ struct Message: Equatable {
     var isUserInput: Bool
 }
 
+extension Color {
+    static let textColor = Color(red: 15 / 255, green: 43 / 255, blue: 61 / 255)
+    static let bodyColor = Color(red: 229 / 255, green: 231 / 255, blue: 235 / 255)
+    
+}
+
 struct ContentView: View {
     
     @State private var textFieldText = ""
@@ -114,27 +120,17 @@ struct ContentView: View {
             .padding()
             
             ZStack(alignment: .topLeading) {
-                Rectangle()
-                    .stroke(Color.gray.opacity(0.5), lineWidth: 1)
-                    .frame(height: 80)
-                    //.cornerRadius(8)
-                    
-                    //.onTapGesture {
-                    //    isFocused = true
-                    //}
                 
                 TextEditor(text: $userInput)
+                    .font(.custom("Parclo", size: 16))
+                    .foregroundColor(.textColor)
                     .frame(height: 80)
                     .padding(.horizontal)
-                    .background(Color.blue.opacity(0.2))
-                    .foregroundColor(.pink)
-                    .font(.body)
-                    .opacity(userInput.isEmpty ? 0.25 : 1)
-                    .overlay(Text("Enter GPT prompt here")
-                        .foregroundColor(.gray)
-                        .opacity(userInput.isEmpty && !isFocused ? 1 : 0)
-                        .alignmentGuide(.leading, computeValue: { d in d[.leading] })
-                        .alignmentGuide(.top, computeValue: { d in d[.top] + 8 })
+                    .background(Color.clear)
+                    .overlay(
+                        Text(userInput.isEmpty && !isFocused ? "Enter GPT prompt here" : "")
+                            .foregroundColor(.gray)
+                            .padding(.horizontal)
                     )
                     .focused($isFocused)
                     .onTapGesture {
@@ -255,7 +251,7 @@ struct ContentView: View {
                 }
             }
         }
-        .background(Color.white)
+        .background(Color.bodyColor)
     }
 }
 
