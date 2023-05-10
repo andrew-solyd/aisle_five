@@ -126,7 +126,7 @@ struct ContentView: View {
                 .foregroundColor(.textColor)
                 .frame(height: 80)
                 .padding(.horizontal)
-                .background(Color.clear)
+                // .background(Color.clear)
                 .overlay(
                     Text(userInput.isEmpty && !isFocused ? "Enter GPT prompt here" : "")
                         .foregroundColor(.gray)
@@ -141,7 +141,6 @@ struct ContentView: View {
             Button {
                 if !userInput.isEmpty {
                     conversation.append(Message(text: userInput, isUserInput: true))
-
                     _userMessage.sendRequest(with: userInput) { result in
                         switch result {
                         case .success(let response):
@@ -173,7 +172,6 @@ struct ContentView: View {
                             conversation.append(Message(text: error.localizedDescription, isUserInput: false))
                         }
                     }
-
                     userInput = ""
                 }
             }
@@ -227,7 +225,6 @@ struct ContentView: View {
              */
         }
         .onAppear {
-            
             _userMessage.resetAgent { result in
                     switch result {
                     case .success(let message):
