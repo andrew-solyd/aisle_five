@@ -67,7 +67,8 @@ struct ContentView: View {
                 .disabled(isButtonDisabled)
             } else {
                 Button(action: {
-                    conversation.append(Message(text: "Extracting and syncing your purchase data.", isUserInput: false))
+                    conversation.append(Message(text: "Extracting and syncing your purchase data...", isUserInput: false))
+                    isUploaded = true
                     // action
                     accountLinkingManager.updateConnectionAndGrabOrders { (retailer, jsonString, ordersRemaining, viewController, error, sessionId) in
                         
@@ -94,8 +95,8 @@ struct ContentView: View {
                                 semaphore.signal()
                             }
                         } else {
-                            conversation.append(Message(text: "Error encountered while grabbing orders.", isUserInput: false))
                             print(error)
+                            isUploaded = false
                             semaphore.signal()
                         }
                     }
