@@ -15,6 +15,8 @@ struct Message: Equatable {
 extension Color {
     static let textColor = Color(red: 15 / 255, green: 43 / 255, blue: 61 / 255)
     static let bodyColor = Color(red: 229 / 255, green: 231 / 255, blue: 235 / 255)
+    static let userColor = Color(red: 229 / 255, green: 231 / 255, blue: 211 / 255)
+    static let aiColor = Color(red: 200 / 255, green: 231 / 255, blue: 235 / 255)
     
 }
 
@@ -33,6 +35,7 @@ struct ContentView: View {
     
     var body: some View {
         VStack {
+            
             if !isLinked {
                 Button(action: {
                     conversation.append(Message(text: "Linking account stand by...", isUserInput: false))
@@ -50,7 +53,7 @@ struct ContentView: View {
                     Text("Link my account")
                         .foregroundColor(.black)
                         .frame(minWidth: 120)
-                        .font(.system(size: 14))
+                        .font(.system(size: 12))
                 }
                 .buttonStyle(BorderedButtonStyle())
                 .border(Color.gray, width: 1.0)
@@ -84,12 +87,11 @@ struct ContentView: View {
                     Text("Extract my data")
                         .foregroundColor(.black)
                         .frame(minWidth: 120)
-                        .font(.system(size: 14))
+                        .font(.system(size: 12))
                 }
                 .buttonStyle(BorderedButtonStyle())
                 .border(Color.gray, width: 1.0)
             }
-            
             ScrollViewReader { scrollViewProxy in
                 ScrollView {
                     LazyVStack(spacing: 8) {
@@ -98,14 +100,15 @@ struct ContentView: View {
                             let isUserInput = conversation[index].isUserInput
                             VStack {
                                 Text(message)
-                                        .foregroundColor(.white)
-                                        .padding(.horizontal)
-                                        .padding(.vertical, 8)
-                                        .background(isUserInput ? Color.black : Color.gray)
-                                        //.cornerRadius(8)
-                                        .fixedSize(horizontal: false, vertical: true)
-                                        .frame(minWidth: 0, maxWidth: .infinity, alignment: .leading)
-                                        .font(.system(size: 14))
+                                    .foregroundColor(.textColor)
+                                    .padding(.horizontal)
+                                    .padding(.vertical, 8)
+                                    .background(isUserInput ? Color.userColor : Color.aiColor)
+                                    //.cornerRadius(8)
+                                    .fixedSize(horizontal: false, vertical: true)
+                                    .frame(minWidth: 0, maxWidth: .infinity, alignment: .leading)
+                                    .font(.system(size: 16))
+                                    .shadow(color: Color.gray.opacity(0.2), radius: 4, x: 2, y: 2)
                             }
                         }
                     }
@@ -117,28 +120,24 @@ struct ContentView: View {
                     }
                 }
             }
-            .padding()
-            
-            ZStack(alignment: .topLeading) {
-                
-                TextEditor(text: $userInput)
-                    .font(.custom("Parclo", size: 16))
-                    .foregroundColor(.textColor)
-                    .frame(height: 80)
-                    .padding(.horizontal)
-                    .background(Color.clear)
-                    .overlay(
-                        Text(userInput.isEmpty && !isFocused ? "Enter GPT prompt here" : "")
-                            .foregroundColor(.gray)
-                            .padding(.horizontal)
-                    )
-                    .focused($isFocused)
-                    .onTapGesture {
-                        isFocused = true
-                    }
-            }
-            .padding()
-            
+            .padding(.top, -12)
+            TextEditor(text: $userInput)
+                .font(.custom("Parclo", size: 16))
+                .foregroundColor(.textColor)
+                .frame(height: 80)
+                .padding(.horizontal)
+                .background(Color.clear)
+                .overlay(
+                    Text(userInput.isEmpty && !isFocused ? "Enter GPT prompt here" : "")
+                        .foregroundColor(.gray)
+                        .padding(.horizontal)
+                )
+                .focused($isFocused)
+                .onTapGesture {
+                    isFocused = true
+                }
+            Spacer()
+            Spacer()
             Button {
                 if !userInput.isEmpty {
                     conversation.append(Message(text: userInput, isUserInput: true))
