@@ -15,7 +15,7 @@ struct Message: Equatable {
 extension Color {
     static let textColor = Color(red: 15 / 255, green: 43 / 255, blue: 61 / 255)
     static let bodyColor = Color(red: 229 / 255, green: 231 / 255, blue: 235 / 255)
-    static let userColor = Color(red: 229 / 255, green: 231 / 255, blue: 211 / 255)
+    static let userColor = Color(red: 0.92, green: 0.93, blue: 0.73)
     static let aiColor = Color(red: 200 / 255, green: 231 / 255, blue: 235 / 255)
     
 }
@@ -56,7 +56,7 @@ struct ContentView: View {
                         .font(.system(size: 12))
                 }
                 .buttonStyle(BorderedButtonStyle())
-                .border(Color.gray, width: 1.0)
+                .border(Color.gray, width: 0.2)
                 .disabled(isButtonDisabled)
             } else {
                 Button(action: {
@@ -90,7 +90,7 @@ struct ContentView: View {
                         .font(.system(size: 12))
                 }
                 .buttonStyle(BorderedButtonStyle())
-                .border(Color.gray, width: 1.0)
+                .border(Color.gray, width: 0.2)
             }
             ScrollViewReader { scrollViewProxy in
                 ScrollView {
@@ -120,7 +120,6 @@ struct ContentView: View {
                     }
                 }
             }
-            .padding(.top, -12)
             TextEditor(text: $userInput)
                 .font(.custom("Parclo", size: 16))
                 .foregroundColor(.textColor)
@@ -179,6 +178,8 @@ struct ContentView: View {
                 Image(systemName: "paperplane.fill")
             }
             .disabled(userInput.isEmpty)
+            .accentColor(userInput.isEmpty ? .gray : .textColor)
+            Spacer(minLength: 10)
             /*
             HStack {
                 Button(action: {
