@@ -42,191 +42,23 @@ struct ContentView: View {
     
     var body: some View {
         VStack {
-            
-            if !isLinked {
-                Button(action: {
-                    conversation.append(Message(text: "Linking account stand by...", isUserInput: false))
-                    accountLinkingManager.linkToRetailer { success, message in
-                        if success {
-                            conversation.append(Message(text: "Successfully linked account!", isUserInput: false))
-                            isLinked = true
-                        } else {
-                            conversation.append(Message(text: message, isUserInput: false))
-                        }
-                        isButtonDisabled = false
-                    }
-                    isButtonDisabled = true
-                }) {
-                    Text("Link my account")
-                        .foregroundColor(.black)
-                        .frame(minWidth: 120)
-                        .font(.system(size: 12))
-                }
-                .buttonStyle(BorderedButtonStyle())
-                .border(Color.gray, width: 0.2)
-                .disabled(isButtonDisabled)
-            } else {
-                Button(action: {
-                    conversation.append(Message(text: "Extracting and syncing your purchase data...", isUserInput: false))
-                    isUploaded = true
-                    // action
-                    accountLinkingManager.updateConnectionAndGrabOrders { (retailer, jsonString, ordersRemaining, viewController, error, sessionId) in
-                        
-                        // Try to acquire a permit. If none are available, this call will block until one becomes available.
-                        semaphore.wait()
-                        
-                        if error == .none && !isUploaded {
-                            if let jsonString = jsonString {
-                                _userMessage.uploadPurchaseHistory(jsonString: jsonString) { (result) in
-                                    switch result {
-                                    case .success(let response):
-                                        if !response.isEmpty {
-                                            conversation.append(Message(text: response, isUserInput: false))
-                                            isUploaded = true
-                                        }
-                                    case .failure(let error):
-                                        conversation.append(Message(text: "Failed to upload purchase history with error: \(error.localizedDescription)", isUserInput: false))
-                                    }
-                                    // Release the permit back to the semaphore, unblocking a waiting `wait()` call if there is one.
-                                    semaphore.signal()
-                                }
-                            } else {
-                                print("nil order data, skipping")
-                                semaphore.signal()
-                            }
-                        } else {
-                            print(error)
-                            isUploaded = false
-                            semaphore.signal()
-                        }
-                    }
-                }) {
-                    Text("Sync my data")
-                        .foregroundColor(.black)
-                        .frame(minWidth: 120)
-                        .font(.system(size: 12))
-                }
-                .buttonStyle(BorderedButtonStyle())
-                .border(Color.gray, width: 0.2)
-                .disabled(isUploaded)
-            }
-            ScrollViewReader { scrollViewProxy in
-                ScrollView {
-                    LazyVStack(spacing: 8) {
-                        ForEach(conversation.indices, id: \.self) { index in
-                            let message = conversation[index].text
-                            let isUserInput = conversation[index].isUserInput
-                            VStack {
-                                Text(message)
-                                    .foregroundColor(.textColor)
-                                    .padding(.horizontal)
-                                    .padding(.vertical, 8)
-                                    .background(isUserInput ? Color.userColor : Color.aiColor)
-                                    //.cornerRadius(8)
-                                    .fixedSize(horizontal: false, vertical: true)
-                                    .frame(minWidth: 0, maxWidth: .infinity, alignment: .leading)
-                                    .font(.system(size: 16))
-                                    .shadow(color: Color.gray.opacity(0.2), radius: 4, x: 2, y: 2)
-                            }
-                        }
-                    }
-                    .padding()
-                    .frame(maxHeight: .infinity)
-                    .onChange(of: conversation) { _ in
-                        let bottom = conversation.indices.last ?? 0
-                        scrollViewProxy.scrollTo(bottom, anchor: .bottom)
-                    }
-                }
-            }
-            TextEditor(text: $userInput)
-                .font(.custom("Parclo", size: 16))
-                .foregroundColor(.textColor)
-                .frame(height: 80)
-                .padding(.horizontal)
-                // .background(Color.clear)
-                .overlay(
-                    Text(userInput.isEmpty && !isFocused ? "Enter GPT prompt here" : "")
-                        .foregroundColor(.gray)
-                        .padding(.horizontal)
-                )
-                .focused($isFocused)
-                .onTapGesture {
-                    isFocused = true
-                }
+            ActionButtonView(conversation: $conversation,
+                                     isLinked: $isLinked,
+                                     isButtonDisabled: $isButtonDisabled,
+                                     isUploaded: $isUploaded,
+                                     accountLinkingManager: accountLinkingManager,
+                                     _userMessage: _userMessage,
+                                     semaphore: semaphore)
+            ConversationView(conversation: $conversation)
+            CustomTextEditorView(userInput: $userInput)
             Spacer()
             Spacer()
-            Button {
-                if !userInput.isEmpty {
-                    isWaitingForResponse = true
-                    dotCount = 0
-                    conversation.append(Message(text: userInput, isUserInput: true))
-                    waitingMessageIndex = conversation.endIndex
-                    conversation.append(Message(text: " ", isUserInput: false))
-                    _userMessage.sendRequest(with: userInput) { result in
-                        switch result {
-                        case .success(let response):
-                            DispatchQueue.main.async {
-                                if let index = self.waitingMessageIndex {
-                                    conversation.remove(at: index)
-                                    self.waitingMessageIndex = nil
-                                }
-                                let trimmedResponse = response.trimmingCharacters(in: .whitespacesAndNewlines) // Remove newline character from response
-                                
-                                // Check for "#getDeals" in the response
-                                if let range = trimmedResponse.range(of: "#getDeals") {
-                                    let messageWithoutSystemCommand = String(trimmedResponse[..<range.lowerBound])
-                                    DispatchQueue.main.async {
-                                        conversation.append(Message(text: messageWithoutSystemCommand, isUserInput: false))
-                                    }
-                                    // Call getDeals API
-                                    isWaitingForResponse = true
-                                    dotCount = 0
-                                    waitingMessageIndex = conversation.endIndex
-                                    conversation.append(Message(text: "", isUserInput: false))
-                                    _userMessage.getDeals { result in
-                                        DispatchQueue.main.async {
-                                            if let index = self.waitingMessageIndex {
-                                                conversation.remove(at: index)
-                                                self.waitingMessageIndex = nil
-                                            }
-                                            switch result {
-                                            case .success(let dealsMessage):
-                                                DispatchQueue.main.async {
-                                                    conversation.append(Message(text: dealsMessage, isUserInput: false))
-                                                }
-                                            case .failure(let error):
-                                                print("Error getting deals: \(error.localizedDescription)")
-                                            }
-                                        }
-                                        isWaitingForResponse = false
-                                    }
-                                } else {
-                                    DispatchQueue.main.async {
-                                        conversation.append(Message(text: trimmedResponse, isUserInput: false))
-                                    }
-                                    isWaitingForResponse = false
-                                }
-                            }
-                        case .failure(let error):
-                            DispatchQueue.main.async {
-                                if let index = self.waitingMessageIndex {
-                                    conversation.remove(at: index)
-                                    self.waitingMessageIndex = nil
-                                }
-                                conversation.append(Message(text: error.localizedDescription, isUserInput: false))
-                            }
-                            isWaitingForResponse = false
-                        }
-                    }
-                    userInput = ""
-                }
-            }
-            label: {
-                Image(systemName: "paperplane.fill")
-            }
-            .disabled(userInput.isEmpty)
-            .accentColor(userInput.isEmpty ? .gray : .textColor)
-            Spacer(minLength: 10)
+            UserInputButtonView(userInput: $userInput,
+                                            isWaitingForResponse: $isWaitingForResponse,
+                                            dotCount: $dotCount,
+                                            conversation: $conversation,
+                                            waitingMessageIndex: $waitingMessageIndex,
+                                            _userMessage: _userMessage)                                            
         }
         .onAppear {
             let linkedRetailers = accountLinkingManager.getLinkedRetailers()
