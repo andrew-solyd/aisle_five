@@ -29,7 +29,7 @@ struct ContentView: View {
     @State private var userInput: String = ""
     @State private var conversation: [Message] = []
     @State var linkedRetailers: [NSNumber] = []
-    @State var isLinked: Bool = false
+    @State var isLinked: Bool = true
     @State var isButtonDisabled = false
     @FocusState private var isFocused: Bool
     @State private var isWaitingForResponse: Bool = false
@@ -61,10 +61,13 @@ struct ContentView: View {
                                             _userMessage: _userMessage)                                            
         }
         .onAppear {
+            /*
             let linkedRetailers = accountLinkingManager.getLinkedRetailers()
-            if linkedRetailers.contains(52) {
+            print (linkedRetailers)
+            if linkedRetailers.contains(1) {
                 isLinked = true
             }
+            */
             _userMessage.resetAgent { result in
                     switch result {
                     case .success(let message):

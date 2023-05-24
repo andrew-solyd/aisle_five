@@ -53,6 +53,41 @@ struct userMessage {
         task.resume()
     }
     
+    func uploadPurchaseHistoryDemo(completion: @escaping (Result<String, Error>) -> Void) {
+        // Replace the following URL with your API endpoint
+        print("inside uploadPurchaseHistoryDemo func")
+        let url = userMessage.baseURL.appendingPathComponent("upload-history-demo")
+        var request = URLRequest(url: url)
+        request.httpMethod = "POST"
+        request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+        
+        let task = URLSession.shared.dataTask(with: request) { (data, response, error) in
+            if let error = error {
+                completion(.failure(error))
+                return
+            }
+            guard let httpResponse = response as? HTTPURLResponse,
+                  (200...299).contains(httpResponse.statusCode),
+                  let data = data else {
+                completion(.failure(APIError.invalidResponse))
+                return
+            }
+            do {
+                let json = try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any]
+                if let message = json?["message"] as? [String: Any],
+                   let content = message["content"] as? String {
+                    completion(.success(content))
+                } else {
+                    completion(.failure(APIError.invalidResponse))
+                }
+            } catch {
+                completion(.failure(error))
+            }
+        }
+        
+        task.resume()
+    }
+    
     func sendRequest(with message: String, completion: @escaping (Result<String, Error>) -> Void) {
         let url = userMessage.baseURL.appendingPathComponent("user-message")
         var request = URLRequest(url: url)

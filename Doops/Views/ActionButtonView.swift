@@ -43,6 +43,20 @@ struct ActionButtonView: View {
             Button(action: {
                 conversation.append(Message(text: "Extracting and syncing your purchase data...", isUserInput: false))
                 isUploaded = true
+                
+                _userMessage.uploadPurchaseHistoryDemo() { (result) in
+                    switch result {
+                    case .success(let response):
+                        if !response.isEmpty {
+                            conversation.append(Message(text: response, isUserInput: false))
+                            isUploaded = true
+                        }
+                    case .failure(let error):
+                        conversation.append(Message(text: "Failed to upload purchase history with error: \(error.localizedDescription)", isUserInput: false))
+                    }
+                }
+                
+                /*
                 accountLinkingManager.updateConnectionAndGrabOrders { (retailer, jsonString, ordersRemaining, viewController, error, sessionId) in
                     
                     semaphore.wait()
@@ -66,11 +80,15 @@ struct ActionButtonView: View {
                             semaphore.signal()
                         }
                     } else {
+                        print("ERRRRRORRRRR!")
                         print(error)
+                        print(error.hashValue)
                         isUploaded = false
                         semaphore.signal()
                     }
+                 
                 }
+                */
             }) {
                 Text("Sync my data")
                     .foregroundColor(.black)
