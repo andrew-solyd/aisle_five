@@ -39,10 +39,9 @@ struct HighlightedText: View {
             
             // Add highlighted part
             let highlighted = text[range]
-            var highlightedAttributedString = AttributedString(String(highlighted))
-            highlightedAttributedString.backgroundColor = UIColor(Color.pink.opacity(0.2))
+            let highlightedAttributedString = createClickableAttributedString(highlighted)
             attributedString.append(highlightedAttributedString)
-            
+    
             lastEndLocation = text.distance(from: text.startIndex, to: range.upperBound) + 1
         }
 
@@ -54,22 +53,57 @@ struct HighlightedText: View {
 
         return attributedString
     }
+    
+    func createClickableAttributedString(_ text: Substring) -> AttributedString {
+        let attributedString = NSMutableAttributedString(string: String(text))
+        attributedString.addAttribute(.backgroundColor, value: UIColor(Color.pink.opacity(0.2)), range: NSRange(location: 0, length: text.utf16.count))
+        
+        // Make the highlighted part clickable
+        let clickableRange = NSRange(location: 0, length: text.utf16.count)
+        let encodedText = String(text).addingPercentEncoding(withAllowedCharacters: .urlHostAllowed) ?? ""
+        let uniqueScheme = "myapp://\(encodedText)"
+        
+        attributedString.addAttribute(.link, value: uniqueScheme, range: clickableRange)
+        
+        return AttributedString(attributedString)
+    }
+
 }
 
 struct MessageView: View {
+    @EnvironmentObject var shoppingList: ShoppingList
     let message: Message
 
     var body: some View {
         VStack {
             HighlightedText(message: message)
-                .foregroundColor(.textColor)
-                .padding(.horizontal)
-                .padding(.vertical, 8)
-                .background(message.isUserInput ? Color.userColor : Color.aiColor)
-                .fixedSize(horizontal: false, vertical: true)
-                .frame(minWidth: 0, maxWidth: .infinity, alignment: .leading)
-                .font(.system(size: 16))
-                .shadow(color: Color.gray.opacity(0.2), radius: 4, x: 2, y: 2)
+            .foregroundColor(.textColor)
+            .padding(.horizontal)
+            .padding(.vertical, 8)
+            .background(message.isUserInput ? Color.userColor : Color.aiColor)
+            .fixedSize(horizontal: false, vertical: true)
+            .frame(minWidth: 0, maxWidth: .infinity, alignment: .leading)
+            .font(.system(size: 16))
+            .shadow(color: Color.gray.opacity(0.2), radius: 4, x: 2, y: 2)
+            .onOpenURL { url in
+                print("URL CLICKED", url)
+                if let urlString = url.absoluteString.removingPercentEncoding,
+                   urlString.hasPrefix("myapp://") {
+                    let text = String(urlString.dropFirst(8))
+                    addToShoppingList(text)
+                }
+            }
         }
+    }
+
+    func addToShoppingList(_ text: String) {
+       let itemName = text.replacingOccurrences(of: "+", with: " ")
+       
+       if !shoppingList.products.contains(itemName) {
+           print("ADDED", itemName)
+           shoppingList.products.append(itemName)
+       } else {
+           print("ITEM ALREADY EXISTS", itemName)
+       }
     }
 }
