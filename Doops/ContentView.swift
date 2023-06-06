@@ -49,7 +49,6 @@ struct ContentView: View {
                                      _userMessage: _userMessage)
                 }
                 .onAppear {
-                    
                     if !isInitiliazied {
                         _userMessage.resetAgent { result in
                             switch result {
@@ -83,6 +82,7 @@ struct ContentView: View {
                             isWaitingForResponse = false
                         }
                         isInitiliazied = true
+                        isTextEditorVisible = true
                     }
                 }
                 .onReceive(timer) { _ in
@@ -108,22 +108,6 @@ struct ContentView: View {
                 isLoading = false
             }
         }
-        .onTapGesture {
-            isTextEditorVisible.toggle()
-        }
-        .overlay(
-            Group {
-                if isTextEditorVisible {
-                    Color.black.opacity(0.001) // Invisible overlay to capture taps
-                        .edgesIgnoringSafeArea(.all)
-                        .onTapGesture {
-                            // Dismiss the keyboard when tapped outside the text editor
-                            UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
-                            isTextEditorVisible = false
-                        }
-                }
-            }
-        )
     }
 }
 

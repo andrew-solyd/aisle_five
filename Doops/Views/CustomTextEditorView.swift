@@ -22,9 +22,10 @@ struct CustomTextEditorView: View {
     var body: some View {
         VStack {
             if isTextEditorVisible {
-                TextField("", text: $userInput)
+                TextField("", text: $userInput, axis: .vertical)
+                    .lineLimit(3)
                     .font(Font.custom("Parclo Serif Regular", size: 17))
-                    ._lineHeightMultiple(1.3)
+                    .lineSpacing(_:5)
                     .foregroundColor(.systemFontColor)
                     .frame(height: 90)
                     .focused($isFocused)
@@ -32,7 +33,8 @@ struct CustomTextEditorView: View {
                     .onSubmit {
                         sendMessage()
                     }
-                    .background(Color.clear)
+                    .padding(.leading, 18)
+                    .offset(y: -20)
             }
         }
         .onChange(of: isTextEditorVisible) { newValue in
@@ -80,6 +82,7 @@ struct CustomTextEditorView: View {
                 conversation.append(Message(text: trimmedResponse, isUserInput: false))
             }
             isWaitingForResponse = false
+            isTextEditorVisible = true
         }
     }
 

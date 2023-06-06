@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct HighlightedText: View {
+    @EnvironmentObject var shoppingList: ShoppingList
     let message: Message
 
     var body: some View {
@@ -55,8 +56,24 @@ struct HighlightedText: View {
     }
     
     func createClickableAttributedString(_ text: Substring) -> AttributedString {
-        let attributedString = NSMutableAttributedString(string: String(text))
-        attributedString.addAttribute(.backgroundColor, value: UIColor(Color.pink.opacity(0.2)), range: NSRange(location: 0, length: text.utf16.count))
+        
+        var attributes: [NSAttributedString.Key: Any] = [:]
+            
+        // Set background color
+        let itemName = String(text)
+        let isInShoppingList = shoppingList.products.contains(itemName)
+        let highlightColor = isInShoppingList ?
+            Color(.sRGB, red: 177/255, green: 255/255, blue: 159/255, opacity: 0.5) : // Light green for items in the shopping list
+            Color(.sRGB, red: 250/255, green: 255/255, blue: 159/255, opacity: 0.5)    // Light yellow for items not in the shopping list
+        attributes[.backgroundColor] = UIColor(highlightColor)
+        
+        // Set font and font color
+        let font = UIFont(name: "Parclo Serif Bold", size: 17)
+        attributes[.font] = font
+        attributes[.foregroundColor] = UIColor(Color.systemFontColor)
+        
+        // Create attributed string with attributes
+        let attributedString = NSMutableAttributedString(string: String(text), attributes: attributes)
         
         // Make the highlighted part clickable
         let clickableRange = NSRange(location: 0, length: text.utf16.count)
@@ -90,7 +107,7 @@ struct MessageView: View {
             .fixedSize(horizontal: false, vertical: true)
             .frame(minWidth: 0, maxWidth: .infinity, alignment: .leading)
             .font(Font.custom("Parclo Serif Medium", size: 17))
-            ._lineHeightMultiple(1.3)
+            .lineSpacing(_:5)
             .kerning(0.5)
             .onOpenURL { url in
                 print("URL CLICKED", url)
