@@ -2,6 +2,8 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>CFBundleGetInfoString</key>
+	<string></string>
 	<key>CFBundleURLTypes</key>
 	<array>
 		<dict>
@@ -14,6 +16,15 @@
 				<string>myapp</string>
 			</array>
 		</dict>
+	</array>
+	<key>UIAppFonts</key>
+	<array>
+		<string>ParcloSerif-Regular.ttf</string>
+		<string>ParcloSerif-Medium.ttf</string>
+		<string>ParcloSerif-Bold.ttf</string>
+		<string>ParcloSerif-Black.ttf</string>
+		<string>ParcloSerif-ExtraBlack.ttf</string>
+		<string>ParcloSerif-Italic.ttf</string>
 	</array>
 </dict>
 </plist>

@@ -13,11 +13,9 @@ struct Message: Equatable {
 }
 
 extension Color {
-    static let textColor = Color(red: 15 / 255, green: 43 / 255, blue: 61 / 255)
-    static let bodyColor = Color(red: 229 / 255, green: 231 / 255, blue: 235 / 255)
-    static let userColor = Color(red: 0.92, green: 0.93, blue: 0.73)
-    static let aiColor = Color(red: 200 / 255, green: 231 / 255, blue: 235 / 255)
-    
+    static let systemFontColor = Color(red: 22/255, green: 42/255, blue: 59/255)
+    static let bodyColor = Color(red: 228 / 255, green: 234 / 255, blue: 240 / 255)
+    static let userFontColor = Color(red: 22/255, green: 42/255, blue: 59/255, opacity: 0.65)
 }
 
 struct ContentView: View {    
@@ -27,6 +25,7 @@ struct ContentView: View {
     
     @State var isLoading = true
     @State var isInitiliazied = false
+    @State private var isTextEditorVisible = false
     @State private var textFieldText = ""
     @State private var userInput: String = ""
     @State private var conversation: [Message] = []
@@ -41,20 +40,16 @@ struct ContentView: View {
                 LoadingView()
             } else {
                 VStack {
-                    ActionButtonView(conversation: $conversation,
+                    ConversationView(conversation: $conversation,
+                                     isWaitingForResponse: $isWaitingForResponse,
+                                     dotCount: $dotCount,
+                                     waitingMessageIndex: $waitingMessageIndex,
+                                     isTextEditorVisible: $isTextEditorVisible,
+                                     userInput: $userInput,
                                      _userMessage: _userMessage)
-                    ConversationView(conversation: $conversation)
-                    CustomTextEditorView(userInput: $userInput)
-                    Spacer()
-                    Spacer()
-                    UserInputButtonView(userInput: $userInput,
-                                        isWaitingForResponse: $isWaitingForResponse,
-                                        dotCount: $dotCount,
-                                        conversation: $conversation,
-                                        waitingMessageIndex: $waitingMessageIndex,
-                                        _userMessage: _userMessage)
                 }
                 .onAppear {
+                    
                     if !isInitiliazied {
                         _userMessage.resetAgent { result in
                             switch result {
@@ -113,6 +108,22 @@ struct ContentView: View {
                 isLoading = false
             }
         }
+        .onTapGesture {
+            isTextEditorVisible.toggle()
+        }
+        .overlay(
+            Group {
+                if isTextEditorVisible {
+                    Color.black.opacity(0.001) // Invisible overlay to capture taps
+                        .edgesIgnoringSafeArea(.all)
+                        .onTapGesture {
+                            // Dismiss the keyboard when tapped outside the text editor
+                            UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
+                            isTextEditorVisible = false
+                        }
+                }
+            }
+        )
     }
 }
 

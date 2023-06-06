@@ -42,7 +42,7 @@ struct UserInputButtonView: View {
             Image(systemName: "paperplane.fill")
         }
         .disabled(userInput.isEmpty)
-        .accentColor(userInput.isEmpty ? .gray : .textColor)
+        .accentColor(userInput.isEmpty ? .gray : .systemFontColor)
         Spacer(minLength: 10)
     }
     

@@ -77,14 +77,21 @@ struct MessageView: View {
     var body: some View {
         VStack {
             HighlightedText(message: message)
-            .foregroundColor(.textColor)
+            .foregroundColor(message.isUserInput ? Color.userFontColor : Color.systemFontColor)
             .padding(.horizontal)
             .padding(.vertical, 8)
-            .background(message.isUserInput ? Color.userColor : Color.aiColor)
+            .background(
+                message.isUserInput ? nil : RoundedRectangle(cornerRadius: 10)
+                    .fill(Color.bodyColor)
+                    .shadow(color: Color.gray.opacity(0.2), radius: 4, x: 2, y: 2)
+                    .overlay(RoundedRectangle(cornerRadius: 10)
+                                .stroke(Color(red: 217/255, green: 225/255, blue: 233/255), lineWidth: 0.5))
+            )
             .fixedSize(horizontal: false, vertical: true)
             .frame(minWidth: 0, maxWidth: .infinity, alignment: .leading)
-            .font(.system(size: 16))
-            .shadow(color: Color.gray.opacity(0.2), radius: 4, x: 2, y: 2)
+            .font(Font.custom("Parclo Serif Medium", size: 17))
+            ._lineHeightMultiple(1.3)
+            .kerning(0.5)
             .onOpenURL { url in
                 print("URL CLICKED", url)
                 if let urlString = url.absoluteString.removingPercentEncoding,

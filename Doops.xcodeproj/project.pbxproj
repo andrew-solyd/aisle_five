@@ -26,6 +26,12 @@
 		3F606F272A00624C0054331B /* AccountLinking.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 3F606F1F2A0062450054331B /* AccountLinking.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		3F606F282A00624E0054331B /* MailCore.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3F606F1E2A0062450054331B /* MailCore.xcframework */; };
 		3F606F292A00624E0054331B /* MailCore.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 3F606F1E2A0062450054331B /* MailCore.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		3F73DE942A2ECFB20018CE78 /* ParcloSerif-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 3F73DE932A2ECFB00018CE78 /* ParcloSerif-Regular.ttf */; };
+		3F73DE9C2A2ED0550018CE78 /* ParcloSerif-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 3F73DE962A2ED0550018CE78 /* ParcloSerif-Bold.ttf */; };
+		3F73DE9D2A2ED0550018CE78 /* ParcloSerif-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 3F73DE972A2ED0550018CE78 /* ParcloSerif-Medium.ttf */; };
+		3F73DE9E2A2ED0550018CE78 /* ParcloSerif-ExtraBlack.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 3F73DE982A2ED0550018CE78 /* ParcloSerif-ExtraBlack.ttf */; };
+		3F73DE9F2A2ED0550018CE78 /* ParcloSerif-Black.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 3F73DE992A2ED0550018CE78 /* ParcloSerif-Black.ttf */; };
+		3F73DEA12A2ED0550018CE78 /* ParcloSerif-Italic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 3F73DE9B2A2ED0550018CE78 /* ParcloSerif-Italic.ttf */; };
 		3FD6B19C2A00B109004B1F33 /* APIClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FD6B19B2A00B109004B1F33 /* APIClient.swift */; };
 		3FF80F402A141D0A00C02D70 /* MessageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FF80F3F2A141D0A00C02D70 /* MessageView.swift */; };
 		3FF80F422A141D4A00C02D70 /* ConversationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FF80F412A141D4A00C02D70 /* ConversationView.swift */; };
@@ -68,6 +74,12 @@
 		3F606F1E2A0062450054331B /* MailCore.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; path = MailCore.xcframework; sourceTree = "<group>"; };
 		3F606F1F2A0062450054331B /* AccountLinking.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; path = AccountLinking.xcframework; sourceTree = "<group>"; };
 		3F606F202A0062450054331B /* BlinkEReceiptStatic.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; path = BlinkEReceiptStatic.xcframework; sourceTree = "<group>"; };
+		3F73DE932A2ECFB00018CE78 /* ParcloSerif-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "ParcloSerif-Regular.ttf"; sourceTree = "<group>"; };
+		3F73DE962A2ED0550018CE78 /* ParcloSerif-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "ParcloSerif-Bold.ttf"; sourceTree = "<group>"; };
+		3F73DE972A2ED0550018CE78 /* ParcloSerif-Medium.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "ParcloSerif-Medium.ttf"; sourceTree = "<group>"; };
+		3F73DE982A2ED0550018CE78 /* ParcloSerif-ExtraBlack.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "ParcloSerif-ExtraBlack.ttf"; sourceTree = "<group>"; };
+		3F73DE992A2ED0550018CE78 /* ParcloSerif-Black.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "ParcloSerif-Black.ttf"; sourceTree = "<group>"; };
+		3F73DE9B2A2ED0550018CE78 /* ParcloSerif-Italic.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "ParcloSerif-Italic.ttf"; sourceTree = "<group>"; };
 		3FD6B19B2A00B109004B1F33 /* APIClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIClient.swift; sourceTree = "<group>"; };
 		3FE805852A0BF54700B4BDDB /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		3FF80F3F2A141D0A00C02D70 /* MessageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageView.swift; sourceTree = "<group>"; };
@@ -123,6 +135,7 @@
 		3F606F032A005D9A0054331B /* Doops */ = {
 			isa = PBXGroup;
 			children = (
+				3F73DE952A2ED0330018CE78 /* Font */,
 				3F09B4F42A1FE7D40009ED1D /* Models */,
 				3FF80F472A1421F800C02D70 /* Views */,
 				3FE805852A0BF54700B4BDDB /* Info.plist */,
@@ -145,6 +158,19 @@
 				3F606F0B2A005D9B0054331B /* Preview Assets.xcassets */,
 			);
 			path = "Preview Content";
+			sourceTree = "<group>";
+		};
+		3F73DE952A2ED0330018CE78 /* Font */ = {
+			isa = PBXGroup;
+			children = (
+				3F73DE932A2ECFB00018CE78 /* ParcloSerif-Regular.ttf */,
+				3F73DE972A2ED0550018CE78 /* ParcloSerif-Medium.ttf */,
+				3F73DE962A2ED0550018CE78 /* ParcloSerif-Bold.ttf */,
+				3F73DE992A2ED0550018CE78 /* ParcloSerif-Black.ttf */,
+				3F73DE982A2ED0550018CE78 /* ParcloSerif-ExtraBlack.ttf */,
+				3F73DE9B2A2ED0550018CE78 /* ParcloSerif-Italic.ttf */,
+			);
+			path = Font;
 			sourceTree = "<group>";
 		};
 		3FF80F472A1421F800C02D70 /* Views */ = {
@@ -220,8 +246,14 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3F73DE9E2A2ED0550018CE78 /* ParcloSerif-ExtraBlack.ttf in Resources */,
+				3F73DE9D2A2ED0550018CE78 /* ParcloSerif-Medium.ttf in Resources */,
+				3F73DE9C2A2ED0550018CE78 /* ParcloSerif-Bold.ttf in Resources */,
+				3F73DE942A2ECFB20018CE78 /* ParcloSerif-Regular.ttf in Resources */,
+				3F73DEA12A2ED0550018CE78 /* ParcloSerif-Italic.ttf in Resources */,
 				3F606F0C2A005D9B0054331B /* Preview Assets.xcassets in Resources */,
 				3F606F092A005D9B0054331B /* Assets.xcassets in Resources */,
+				3F73DE9F2A2ED0550018CE78 /* ParcloSerif-Black.ttf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

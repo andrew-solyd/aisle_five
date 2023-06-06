@@ -10,17 +10,19 @@ import SwiftUI
 struct LoadingView: View {
     var body: some View {
         VStack {
-            Image("solydaria-logo") // Make sure to add your image to the Assets.xcassets folder
+            Image("solydaria-logo")
                 .resizable()
                 .aspectRatio(contentMode: .fit)
                 .frame(width: 200, height: 200)
-                .padding(.bottom, 20) 
+                .padding(.bottom, 20)
             
             Text("Shopping List Co-Pilot")
-                .font(.title3)
-                .fontWeight(.bold)
+                .font(Font.custom("Parclo Serif Black", size: 20))
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .background(Color.bodyColor)
+        .onAppear {
+     
+        }
     }
 }
