@@ -23,18 +23,19 @@ struct UserInputView: View {
         VStack {
             if isTextEditorVisible {
                 TextField("", text: $userInput, axis: .vertical)
-                    .lineLimit(3)
+                    .lineLimit(5)
                     .font(Font.custom("Parclo Serif Regular", size: 17))
                     .lineSpacing(_:5)
                     .foregroundColor(.systemFontColor)
                     .frame(height: 90)
                     .focused($isFocused)
                     .submitLabel(.send)
-                    .onSubmit {
-                        sendMessage()
-                    }
+                    .onChange(of: userInput, perform: { value in
+                        if value.contains("\n") {
+                            sendMessage()
+                        }
+                    })
                     .padding(.leading, 18)
-                    .offset(y: -20)
             }
         }
         .onChange(of: isTextEditorVisible) { newValue in
@@ -52,10 +53,10 @@ struct UserInputView: View {
         if !userInput.isEmpty {
             isWaitingForResponse = true
             dotCount = 0
-            conversation.append(Message(text: userInput, isUserInput: true))
+            conversation.append(Message(text: userInput.replacingOccurrences(of: "\n", with: ""), isUserInput: true))
             waitingMessageIndex = conversation.endIndex
             conversation.append(Message(text: " ", isUserInput: false))
-            _userMessage.sendRequest(with: userInput) { result in
+            _userMessage.sendRequest(with: userInput.replacingOccurrences(of: "\n", with: "")) { result in
                 switch result {
                 case .success(let response):
                     processResponse(response)

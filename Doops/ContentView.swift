@@ -80,9 +80,9 @@ struct ContentView: View {
                                 }
                             }
                             isWaitingForResponse = false
+                            isTextEditorVisible = true
                         }
                         isInitiliazied = true
-                        isTextEditorVisible = true
                     }
                 }
                 .onReceive(timer) { _ in

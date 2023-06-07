@@ -37,7 +37,7 @@
 		3FF80F422A141D4A00C02D70 /* ConversationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FF80F412A141D4A00C02D70 /* ConversationView.swift */; };
 		3FF80F442A141F8B00C02D70 /* ActionButtonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FF80F432A141F8B00C02D70 /* ActionButtonView.swift */; };
 		3FF80F462A14203000C02D70 /* UserInputButtonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FF80F452A14203000C02D70 /* UserInputButtonView.swift */; };
-		3FF80F492A14221900C02D70 /* CustomTextEditorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FF80F482A14221900C02D70 /* CustomTextEditorView.swift */; };
+		3FF80F492A14221900C02D70 /* UserInputView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FF80F482A14221900C02D70 /* UserInputView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -86,7 +86,7 @@
 		3FF80F412A141D4A00C02D70 /* ConversationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationView.swift; sourceTree = "<group>"; };
 		3FF80F432A141F8B00C02D70 /* ActionButtonView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActionButtonView.swift; sourceTree = "<group>"; };
 		3FF80F452A14203000C02D70 /* UserInputButtonView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserInputButtonView.swift; sourceTree = "<group>"; };
-		3FF80F482A14221900C02D70 /* CustomTextEditorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomTextEditorView.swift; sourceTree = "<group>"; };
+		3FF80F482A14221900C02D70 /* UserInputView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserInputView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -180,7 +180,7 @@
 				3FF80F432A141F8B00C02D70 /* ActionButtonView.swift */,
 				3FF80F3F2A141D0A00C02D70 /* MessageView.swift */,
 				3FF80F412A141D4A00C02D70 /* ConversationView.swift */,
-				3FF80F482A14221900C02D70 /* CustomTextEditorView.swift */,
+				3FF80F482A14221900C02D70 /* UserInputView.swift */,
 				3FF80F452A14203000C02D70 /* UserInputButtonView.swift */,
 				3F09B4F02A1FDD970009ED1D /* ShoppingListView.swift */,
 			);
@@ -273,7 +273,7 @@
 				3F09B4EF2A1FDA950009ED1D /* LoadingView.swift in Sources */,
 				3F09B4F62A1FE7EE0009ED1D /* ShoppingList.swift in Sources */,
 				3FF80F402A141D0A00C02D70 /* MessageView.swift in Sources */,
-				3FF80F492A14221900C02D70 /* CustomTextEditorView.swift in Sources */,
+				3FF80F492A14221900C02D70 /* UserInputView.swift in Sources */,
 				3F09B4F12A1FDD970009ED1D /* ShoppingListView.swift in Sources */,
 				3FF80F462A14203000C02D70 /* UserInputButtonView.swift in Sources */,
 				3FF80F442A141F8B00C02D70 /* ActionButtonView.swift in Sources */,

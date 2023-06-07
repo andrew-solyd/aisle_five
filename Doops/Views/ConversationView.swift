@@ -30,13 +30,13 @@ struct ConversationView: View {
                             lastSeenMessageIndex = index
                         }
                     }
-                    CustomTextEditorView(userInput: $userInput,
-                                         isWaitingForResponse: $isWaitingForResponse,
-                                         dotCount: $dotCount,
-                                         conversation: $conversation,
-                                         waitingMessageIndex: $waitingMessageIndex,
-                                         isTextEditorVisible: $isTextEditorVisible,
-                                         _userMessage: _userMessage)
+                    UserInputView(userInput: $userInput,
+                                     isWaitingForResponse: $isWaitingForResponse,
+                                     dotCount: $dotCount,
+                                     conversation: $conversation,
+                                     waitingMessageIndex: $waitingMessageIndex,
+                                     isTextEditorVisible: $isTextEditorVisible,
+                                     _userMessage: _userMessage)
                 }
                 .padding()
                 .frame(maxHeight: .infinity)
