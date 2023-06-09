@@ -68,7 +68,7 @@ struct HighlightedText: View {
         attributes[.backgroundColor] = UIColor(highlightColor)
         
         // Set font and font color
-        let font = UIFont(name: "Parclo Serif Bold", size: 17)
+        let font = UIFont(name: "Parclo Serif Medium", size: 18)
         attributes[.font] = font
         attributes[.foregroundColor] = UIColor(Color.systemFontColor)
         
@@ -90,6 +90,8 @@ struct HighlightedText: View {
 struct MessageView: View {
     @EnvironmentObject var shoppingList: ShoppingList
     let message: Message
+    
+    @State private var lastAddedTime = Date(timeIntervalSince1970: 0)
 
     var body: some View {
         VStack {
@@ -106,7 +108,7 @@ struct MessageView: View {
             )
             .fixedSize(horizontal: false, vertical: true)
             .frame(minWidth: 0, maxWidth: .infinity, alignment: .leading)
-            .font(Font.custom("Parclo Serif Medium", size: 17))
+            .font(Font.custom("Parclo Serif Regular", size: 18))
             .lineSpacing(_:5)
             .kerning(0.5)
             .onOpenURL { url in
@@ -114,20 +116,27 @@ struct MessageView: View {
                 if let urlString = url.absoluteString.removingPercentEncoding,
                    urlString.hasPrefix("myapp://") {
                     let text = String(urlString.dropFirst(8))
-                    addToShoppingList(text)
+                    toggleInShoppingList(text)
                 }
             }
         }
     }
 
-    func addToShoppingList(_ text: String) {
-       let itemName = text.replacingOccurrences(of: "+", with: " ")
-       
-       if !shoppingList.products.contains(itemName) {
-           print("ADDED", itemName)
-           shoppingList.products.append(itemName)
-       } else {
-           print("ITEM ALREADY EXISTS", itemName)
-       }
+    func toggleInShoppingList(_ text: String) {
+        let currentTime = Date()
+        if currentTime.timeIntervalSince(self.lastAddedTime) < 0.6 {
+            return
+        }
+        self.lastAddedTime = currentTime
+
+        let itemName = text.replacingOccurrences(of: "+", with: " ")
+        
+        if let existingIndex = shoppingList.products.firstIndex(of: itemName) {
+            print("REMOVED", itemName)
+            shoppingList.products.remove(at: existingIndex)
+        } else {
+            print("ADDED", itemName)
+            shoppingList.products.append(itemName)
+        }
     }
 }

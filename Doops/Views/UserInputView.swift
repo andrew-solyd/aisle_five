@@ -24,8 +24,8 @@ struct UserInputView: View {
             if isTextEditorVisible {
                 TextField("", text: $userInput, axis: .vertical)
                     .lineLimit(5)
-                    .font(Font.custom("Parclo Serif Regular", size: 17))
-                    .lineSpacing(_:5)
+                    .font(Font.custom("Parclo Serif Regular", size: 18))
+                    .lineSpacing(_:6)
                     .foregroundColor(.systemFontColor)
                     .frame(height: 90)
                     .focused($isFocused)

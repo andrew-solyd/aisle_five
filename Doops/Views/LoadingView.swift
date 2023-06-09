@@ -10,19 +10,15 @@ import SwiftUI
 struct LoadingView: View {
     var body: some View {
         VStack {
-            Image("solydaria-logo")
-                .resizable()
-                .aspectRatio(contentMode: .fit)
-                .frame(width: 200, height: 200)
-                .padding(.bottom, 20)
-            
-            Text("Shopping List Co-Pilot")
-                .font(Font.custom("Parclo Serif Black", size: 20))
+            Spacer() // Spacer added to center vertically
+            Text("5")
+                .font(Font.custom("Parclo Serif Black", size: 50))
+            Spacer() // Spacer added to center vertically
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .background(Color.bodyColor)
         .onAppear {
-     
+            // Code to execute when the view appears
         }
     }
 }
