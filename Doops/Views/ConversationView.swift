@@ -54,17 +54,12 @@ struct ConversationView: View {
                 .onPreferenceChange(ViewOffsetKey.self) { offset in
                     let previousOffset = scrollOffset
                     scrollOffset = offset
-
                     if scrollOffset <= 0 { return }
-
                     if scrollOffset > previousOffset {
                         isAtBottom = true
                     } else if scrollOffset < previousOffset {
                         isAtBottom = false
                     }
-
-                    print("Scroll offset: \(scrollOffset), isAtBottom: \(isAtBottom)")
-
                     // Scroll up
                     if isAtBottom {
                         isTextEditorVisible = true
@@ -74,8 +69,6 @@ struct ConversationView: View {
                         isTextEditorVisible = false
                     }
                 }
-
-
             }
             // System icons mask bar
             Color.bodyColor
