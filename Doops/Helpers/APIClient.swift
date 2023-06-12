@@ -13,9 +13,8 @@ enum APIError: Error {
 }
 
 struct userMessage {
-    // static let baseURL = URL(string: "http://localhost:8080")!
-
-    static let baseURL = URL(string: "https://solyd-open-api.fly.dev")!
+    static let baseURL = URL(string: "http://localhost:8080")!
+    // static let baseURL = URL(string: "https://solyd-open-api.fly.dev")!
     
     func uploadPurchaseHistory(jsonString: String, completion: @escaping (Result<String, Error>) -> Void) {
         // Replace the following URL with your API endpoint

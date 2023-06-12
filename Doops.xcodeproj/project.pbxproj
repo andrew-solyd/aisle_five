@@ -135,18 +135,18 @@
 		3F606F032A005D9A0054331B /* Doops */ = {
 			isa = PBXGroup;
 			children = (
+				3FE805852A0BF54700B4BDDB /* Info.plist */,
+				3F606F082A005D9B0054331B /* Assets.xcassets */,
+				3F606F0F2A005D9B0054331B /* Doops.xcdatamodeld */,
 				3F73DE952A2ED0330018CE78 /* Font */,
 				3F09B4F42A1FE7D40009ED1D /* Models */,
 				3FF80F472A1421F800C02D70 /* Views */,
-				3FE805852A0BF54700B4BDDB /* Info.plist */,
+				3FC8F1942A36BED9008DAB79 /* Helpers */,
 				3F606F042A005D9A0054331B /* DoopsApp.swift */,
 				3F1037982A008DAF00336E69 /* AccountLinkingManager.swift */,
-				3FD6B19B2A00B109004B1F33 /* APIClient.swift */,
 				3F09B4F22A1FE28F0009ED1D /* AppInitializer.swift */,
 				3F606F062A005D9A0054331B /* ContentView.swift */,
-				3F606F082A005D9B0054331B /* Assets.xcassets */,
 				3F606F0D2A005D9B0054331B /* Persistence.swift */,
-				3F606F0F2A005D9B0054331B /* Doops.xcdatamodeld */,
 				3F606F0A2A005D9B0054331B /* Preview Content */,
 			);
 			path = Doops;
@@ -171,6 +171,14 @@
 				3F73DE9B2A2ED0550018CE78 /* ParcloSerif-Italic.ttf */,
 			);
 			path = Font;
+			sourceTree = "<group>";
+		};
+		3FC8F1942A36BED9008DAB79 /* Helpers */ = {
+			isa = PBXGroup;
+			children = (
+				3FD6B19B2A00B109004B1F33 /* APIClient.swift */,
+			);
+			path = Helpers;
 			sourceTree = "<group>";
 		};
 		3FF80F472A1421F800C02D70 /* Views */ = {
