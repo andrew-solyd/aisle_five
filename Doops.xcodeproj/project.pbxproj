@@ -11,7 +11,6 @@
 		3F09B4F12A1FDD970009ED1D /* ShoppingListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F09B4F02A1FDD970009ED1D /* ShoppingListView.swift */; };
 		3F09B4F32A1FE28F0009ED1D /* AppInitializer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F09B4F22A1FE28F0009ED1D /* AppInitializer.swift */; };
 		3F09B4F62A1FE7EE0009ED1D /* ShoppingList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F09B4F52A1FE7EE0009ED1D /* ShoppingList.swift */; };
-		3F1037992A008DAF00336E69 /* AccountLinkingManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F1037982A008DAF00336E69 /* AccountLinkingManager.swift */; };
 		3F606F052A005D9A0054331B /* DoopsApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F606F042A005D9A0054331B /* DoopsApp.swift */; };
 		3F606F072A005D9A0054331B /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F606F062A005D9A0054331B /* ContentView.swift */; };
 		3F606F092A005D9B0054331B /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 3F606F082A005D9B0054331B /* Assets.xcassets */; };
@@ -32,6 +31,7 @@
 		3F73DE9E2A2ED0550018CE78 /* ParcloSerif-ExtraBlack.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 3F73DE982A2ED0550018CE78 /* ParcloSerif-ExtraBlack.ttf */; };
 		3F73DE9F2A2ED0550018CE78 /* ParcloSerif-Black.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 3F73DE992A2ED0550018CE78 /* ParcloSerif-Black.ttf */; };
 		3F73DEA12A2ED0550018CE78 /* ParcloSerif-Italic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 3F73DE9B2A2ED0550018CE78 /* ParcloSerif-Italic.ttf */; };
+		3FC8F1982A36C94C008DAB79 /* KeyboardAdaptive.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FC8F1972A36C94C008DAB79 /* KeyboardAdaptive.swift */; };
 		3FD6B19C2A00B109004B1F33 /* APIClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FD6B19B2A00B109004B1F33 /* APIClient.swift */; };
 		3FF80F402A141D0A00C02D70 /* MessageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FF80F3F2A141D0A00C02D70 /* MessageView.swift */; };
 		3FF80F422A141D4A00C02D70 /* ConversationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FF80F412A141D4A00C02D70 /* ConversationView.swift */; };
@@ -62,7 +62,6 @@
 		3F09B4F02A1FDD970009ED1D /* ShoppingListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShoppingListView.swift; sourceTree = "<group>"; };
 		3F09B4F22A1FE28F0009ED1D /* AppInitializer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppInitializer.swift; sourceTree = "<group>"; };
 		3F09B4F52A1FE7EE0009ED1D /* ShoppingList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShoppingList.swift; sourceTree = "<group>"; };
-		3F1037982A008DAF00336E69 /* AccountLinkingManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountLinkingManager.swift; sourceTree = "<group>"; };
 		3F606F012A005D9A0054331B /* Doops.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Doops.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		3F606F042A005D9A0054331B /* DoopsApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DoopsApp.swift; sourceTree = "<group>"; };
 		3F606F062A005D9A0054331B /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -80,6 +79,7 @@
 		3F73DE982A2ED0550018CE78 /* ParcloSerif-ExtraBlack.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "ParcloSerif-ExtraBlack.ttf"; sourceTree = "<group>"; };
 		3F73DE992A2ED0550018CE78 /* ParcloSerif-Black.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "ParcloSerif-Black.ttf"; sourceTree = "<group>"; };
 		3F73DE9B2A2ED0550018CE78 /* ParcloSerif-Italic.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "ParcloSerif-Italic.ttf"; sourceTree = "<group>"; };
+		3FC8F1972A36C94C008DAB79 /* KeyboardAdaptive.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyboardAdaptive.swift; sourceTree = "<group>"; };
 		3FD6B19B2A00B109004B1F33 /* APIClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIClient.swift; sourceTree = "<group>"; };
 		3FE805852A0BF54700B4BDDB /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		3FF80F3F2A141D0A00C02D70 /* MessageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageView.swift; sourceTree = "<group>"; };
@@ -143,7 +143,6 @@
 				3FF80F472A1421F800C02D70 /* Views */,
 				3FC8F1942A36BED9008DAB79 /* Helpers */,
 				3F606F042A005D9A0054331B /* DoopsApp.swift */,
-				3F1037982A008DAF00336E69 /* AccountLinkingManager.swift */,
 				3F09B4F22A1FE28F0009ED1D /* AppInitializer.swift */,
 				3F606F062A005D9A0054331B /* ContentView.swift */,
 				3F606F0D2A005D9B0054331B /* Persistence.swift */,
@@ -177,6 +176,7 @@
 			isa = PBXGroup;
 			children = (
 				3FD6B19B2A00B109004B1F33 /* APIClient.swift */,
+				3FC8F1972A36C94C008DAB79 /* KeyboardAdaptive.swift */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
@@ -272,11 +272,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3FC8F1982A36C94C008DAB79 /* KeyboardAdaptive.swift in Sources */,
 				3F606F0E2A005D9B0054331B /* Persistence.swift in Sources */,
 				3F606F072A005D9A0054331B /* ContentView.swift in Sources */,
 				3F09B4F32A1FE28F0009ED1D /* AppInitializer.swift in Sources */,
 				3F606F052A005D9A0054331B /* DoopsApp.swift in Sources */,
-				3F1037992A008DAF00336E69 /* AccountLinkingManager.swift in Sources */,
 				3F606F112A005D9B0054331B /* Doops.xcdatamodeld in Sources */,
 				3F09B4EF2A1FDA950009ED1D /* LoadingView.swift in Sources */,
 				3F09B4F62A1FE7EE0009ED1D /* ShoppingList.swift in Sources */,

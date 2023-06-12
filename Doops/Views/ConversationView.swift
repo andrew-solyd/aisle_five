@@ -16,7 +16,7 @@ struct ConversationView: View {
     @Binding var userInput: String
     let _userMessage: userMessage
     @State private var lastSeenMessageIndex: Int?
-    @State private var scrollOffset: CGFloat = -1e10
+    @State private var scrollOffset: CGFloat = 0
     @State private var dragOffset: CGFloat = 0
     @State private var isAtBottom: Bool = true
     
@@ -38,6 +38,7 @@ struct ConversationView: View {
                                       waitingMessageIndex: $waitingMessageIndex,
                                       isTextEditorVisible: $isTextEditorVisible,
                                       _userMessage: _userMessage)
+                        Spacer()
                     }
                     .padding()
                     .frame(maxHeight: .infinity)
@@ -48,41 +49,33 @@ struct ConversationView: View {
                         }
                     )
                 }
+                .keyboardAdaptive()
                 .coordinateSpace(name: "scrollView")
                 .onPreferenceChange(ViewOffsetKey.self) { offset in
-                    isAtBottom = offset > scrollOffset
+                    let previousOffset = scrollOffset
                     scrollOffset = offset
+
+                    if scrollOffset <= 0 { return }
+
+                    if scrollOffset > previousOffset {
+                        isAtBottom = true
+                    } else if scrollOffset < previousOffset {
+                        isAtBottom = false
+                    }
+
                     print("Scroll offset: \(scrollOffset), isAtBottom: \(isAtBottom)")
-                    if scrollOffset > 0 && isAtBottom{
+
+                    // Scroll up
+                    if isAtBottom {
                         isTextEditorVisible = true
                     }
-                    if scrollOffset < 0 && isTextEditorVisible{
+                    // Scroll down
+                    if !isAtBottom {
                         isTextEditorVisible = false
                     }
                 }
-                .gesture(
-                    DragGesture(minimumDistance: 50, coordinateSpace: .local)
-                        .onChanged { value in
-                            self.dragOffset = value.translation.height
-                            print("Drag offset: \(dragOffset)")
-                        }
-                        .onEnded({ value in
-                            // If swipe down
-                            if value.translation.height > 0 {
-                                // if TextEditor is visible hide it
-                                if isTextEditorVisible {
-                                    isTextEditorVisible = false
-                                }
-                            }
-                            // If swipe up
-                            else if value.translation.height < 0 {
-                                // if last message (most recent, most bottom one) has been reached make TextEditor visible
-                                if !isTextEditorVisible && isAtBottom {
-                                    isTextEditorVisible = true
-                                }
-                            }
-                        })
-                )
+
+
             }
             // System icons mask bar
             Color.bodyColor

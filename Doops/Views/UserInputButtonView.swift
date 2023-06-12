@@ -50,18 +50,10 @@ struct UserInputButtonView: View {
         DispatchQueue.main.async {
             removeWaitingMessage()
             let trimmedResponse = response.trimmingCharacters(in: .whitespacesAndNewlines)
-            if let range = trimmedResponse.range(of: "#getDeals") {
-                let messageWithoutSystemCommand = String(trimmedResponse[..<range.lowerBound])
-                DispatchQueue.main.async {
-                    conversation.append(Message(text: messageWithoutSystemCommand, isUserInput: false))
-                }
-                getDeals()
-            } else {
-                DispatchQueue.main.async {
-                    conversation.append(Message(text: trimmedResponse, isUserInput: false))
-                }
-                isWaitingForResponse = false
+            DispatchQueue.main.async {
+                conversation.append(Message(text: trimmedResponse, isUserInput: false))
             }
+            isWaitingForResponse = false
         }
     }
     
@@ -72,24 +64,4 @@ struct UserInputButtonView: View {
         }
     }
     
-    func getDeals() {
-        isWaitingForResponse = true
-        dotCount = 0
-        waitingMessageIndex = conversation.endIndex
-        conversation.append(Message(text: "", isUserInput: false))
-        _userMessage.getDeals { result in
-            DispatchQueue.main.async {
-                removeWaitingMessage()
-                switch result {
-                case .success(let dealsMessage):
-                    DispatchQueue.main.async {
-                        conversation.append(Message(text: dealsMessage, isUserInput: false))
-                    }
-                case .failure(let error):
-                    print("Error getting deals: \(error.localizedDescription)")
-                }
-            }
-            isWaitingForResponse = false
-        }
-    }
 }
