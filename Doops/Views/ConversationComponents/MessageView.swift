@@ -61,7 +61,7 @@ struct HighlightedText: View {
             
         // Set background color
         let itemName = String(text)
-        let isInShoppingList = shoppingList.products.contains(itemName)
+        let isInShoppingList = shoppingList.products.contains(where: { $0.name == itemName })
         let highlightColor = isInShoppingList ?
             Color(.sRGB, red: 177/255, green: 255/255, blue: 159/255, opacity: 0.5) : // Light green for items in the shopping list
             Color(.sRGB, red: 250/255, green: 255/255, blue: 159/255, opacity: 0.5)    // Light yellow for items not in the shopping list
@@ -131,12 +131,12 @@ struct MessageView: View {
 
         let itemName = text.replacingOccurrences(of: "+", with: " ")
         
-        if let existingIndex = shoppingList.products.firstIndex(of: itemName) {
+        if let existingIndex = shoppingList.products.firstIndex(where: { $0.name == itemName }) {
             print("REMOVED", itemName)
             shoppingList.products.remove(at: existingIndex)
         } else {
             print("ADDED", itemName)
-            shoppingList.products.append(itemName)
+            shoppingList.products.append(Product(name: itemName, isChecked: false))
         }
     }
 }

@@ -14,6 +14,7 @@ struct ConversationView: View {
     @Binding var waitingMessageIndex: Int?
     @Binding var isTextEditorVisible: Bool
     @Binding var userInput: String
+    @Binding var isShowingShoppingList: Bool
     let _userMessage: userMessage
     @State private var lastSeenMessageIndex: Int?
     @State private var scrollOffset: CGFloat = 0
@@ -29,6 +30,9 @@ struct ConversationView: View {
                             MessageView(message: conversation[index])
                                 .onAppear {
                                     lastSeenMessageIndex = index
+                                    if lastSeenMessageIndex == conversation.count - 1 {
+                                        isTextEditorVisible = true
+                                    }
                                 }
                         }
                         UserInputView(userInput: $userInput,
@@ -60,11 +64,7 @@ struct ConversationView: View {
                     } else if scrollOffset < previousOffset {
                         isAtBottom = false
                     }
-                    // Scroll up
-                    if isAtBottom {
-                        isTextEditorVisible = true
-                    }
-                    // Scroll down
+                    // Swipe Down / Scroll Up
                     if !isAtBottom {
                         isTextEditorVisible = false
                     }
@@ -75,7 +75,6 @@ struct ConversationView: View {
                 .frame(height: 50)
                 .ignoresSafeArea(edges: .top)
                 .alignmentGuide(.top, computeValue: { _ in 0 })
-
             // This needs to hit 0 opacity by the time we scroll into the mask bar
             LinearGradient(gradient: Gradient(colors: [Color.white.opacity(1.0), Color.white.opacity(0.0)]),
                            startPoint: .top,
@@ -83,8 +82,20 @@ struct ConversationView: View {
                 .frame(height: 100) // Adjust the height to control the fade-out length
                 .ignoresSafeArea(edges: .top)
                 .alignmentGuide(.top, computeValue: { _ in 0 })
-            // A bit of margin for the text editor
-
+            // Shopping List Button
+            Button(action: {
+                isShowingShoppingList = true
+            }) {
+                Image("list-icon")
+                    .resizable()
+                    .aspectRatio(contentMode: .fit)
+                    .frame(width: 48, height: 48) // Frame set to 48x48
+                    .background(Color.clear) // Clear background
+                    .opacity(0.5)
+            }
+            .padding(.bottom, 30)
+            .padding(.trailing, 30)
+            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottomTrailing)
         }
     }
 }

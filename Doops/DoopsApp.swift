@@ -1,6 +1,6 @@
 //
-//  DoopsApp.swift
-//  Doops
+//  AisleFiveApp.swift
+//  AisleFive
 //
 //  Created by Andrew Yakovlev on 5/1/23.
 //
@@ -19,7 +19,7 @@ struct DoopsApp: App {
                 .environmentObject(shoppingList)
                 .onOpenURL { url in
                     if url.scheme == "product", let product = url.host {
-                        shoppingList.products.append(product)
+                        shoppingList.products.append(Product(name: product, isChecked: false))
                     }
                 }
         }

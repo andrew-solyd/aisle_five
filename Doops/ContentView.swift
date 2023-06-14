@@ -32,12 +32,15 @@ struct ContentView: View {
     @State private var isWaitingForResponse: Bool = false
     @State private var dotCount: Int = 0
     @State private var waitingMessageIndex: Int? = nil
+    @State private var isShowingShoppingList = false
     @FocusState private var isFocused: Bool
     
     var body: some View {
         NavigationView {
             if isLoading {
                 LoadingView()
+            } else if isShowingShoppingList {
+                    ShoppingListView(isShowingShoppingList: $isShowingShoppingList)
             } else {
                 VStack {
                     ConversationView(conversation: $conversation,
@@ -46,6 +49,7 @@ struct ContentView: View {
                                      waitingMessageIndex: $waitingMessageIndex,
                                      isTextEditorVisible: $isTextEditorVisible,
                                      userInput: $userInput,
+                                     isShowingShoppingList: $isShowingShoppingList,
                                      _userMessage: _userMessage)
                 }
                 .onAppear {

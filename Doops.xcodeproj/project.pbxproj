@@ -35,8 +35,6 @@
 		3FD6B19C2A00B109004B1F33 /* APIClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FD6B19B2A00B109004B1F33 /* APIClient.swift */; };
 		3FF80F402A141D0A00C02D70 /* MessageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FF80F3F2A141D0A00C02D70 /* MessageView.swift */; };
 		3FF80F422A141D4A00C02D70 /* ConversationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FF80F412A141D4A00C02D70 /* ConversationView.swift */; };
-		3FF80F442A141F8B00C02D70 /* ActionButtonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FF80F432A141F8B00C02D70 /* ActionButtonView.swift */; };
-		3FF80F462A14203000C02D70 /* UserInputButtonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FF80F452A14203000C02D70 /* UserInputButtonView.swift */; };
 		3FF80F492A14221900C02D70 /* UserInputView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FF80F482A14221900C02D70 /* UserInputView.swift */; };
 /* End PBXBuildFile section */
 
@@ -84,8 +82,6 @@
 		3FE805852A0BF54700B4BDDB /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		3FF80F3F2A141D0A00C02D70 /* MessageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageView.swift; sourceTree = "<group>"; };
 		3FF80F412A141D4A00C02D70 /* ConversationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationView.swift; sourceTree = "<group>"; };
-		3FF80F432A141F8B00C02D70 /* ActionButtonView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActionButtonView.swift; sourceTree = "<group>"; };
-		3FF80F452A14203000C02D70 /* UserInputButtonView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserInputButtonView.swift; sourceTree = "<group>"; };
 		3FF80F482A14221900C02D70 /* UserInputView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserInputView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -138,14 +134,12 @@
 				3FE805852A0BF54700B4BDDB /* Info.plist */,
 				3F606F082A005D9B0054331B /* Assets.xcassets */,
 				3F606F0F2A005D9B0054331B /* Doops.xcdatamodeld */,
+				3F606F042A005D9A0054331B /* DoopsApp.swift */,
+				3F606F062A005D9A0054331B /* ContentView.swift */,
 				3F73DE952A2ED0330018CE78 /* Font */,
 				3F09B4F42A1FE7D40009ED1D /* Models */,
 				3FF80F472A1421F800C02D70 /* Views */,
 				3FC8F1942A36BED9008DAB79 /* Helpers */,
-				3F606F042A005D9A0054331B /* DoopsApp.swift */,
-				3F09B4F22A1FE28F0009ED1D /* AppInitializer.swift */,
-				3F606F062A005D9A0054331B /* ContentView.swift */,
-				3F606F0D2A005D9B0054331B /* Persistence.swift */,
 				3F606F0A2A005D9B0054331B /* Preview Content */,
 			);
 			path = Doops;
@@ -175,21 +169,29 @@
 		3FC8F1942A36BED9008DAB79 /* Helpers */ = {
 			isa = PBXGroup;
 			children = (
+				3F09B4F22A1FE28F0009ED1D /* AppInitializer.swift */,
+				3F606F0D2A005D9B0054331B /* Persistence.swift */,
 				3FD6B19B2A00B109004B1F33 /* APIClient.swift */,
 				3FC8F1972A36C94C008DAB79 /* KeyboardAdaptive.swift */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
 		};
+		3FC8F1992A36D8C1008DAB79 /* ConversationComponents */ = {
+			isa = PBXGroup;
+			children = (
+				3FF80F3F2A141D0A00C02D70 /* MessageView.swift */,
+				3FF80F482A14221900C02D70 /* UserInputView.swift */,
+			);
+			path = ConversationComponents;
+			sourceTree = "<group>";
+		};
 		3FF80F472A1421F800C02D70 /* Views */ = {
 			isa = PBXGroup;
 			children = (
 				3F09B4EE2A1FDA950009ED1D /* LoadingView.swift */,
-				3FF80F432A141F8B00C02D70 /* ActionButtonView.swift */,
-				3FF80F3F2A141D0A00C02D70 /* MessageView.swift */,
 				3FF80F412A141D4A00C02D70 /* ConversationView.swift */,
-				3FF80F482A14221900C02D70 /* UserInputView.swift */,
-				3FF80F452A14203000C02D70 /* UserInputButtonView.swift */,
+				3FC8F1992A36D8C1008DAB79 /* ConversationComponents */,
 				3F09B4F02A1FDD970009ED1D /* ShoppingListView.swift */,
 			);
 			path = Views;
@@ -283,8 +285,6 @@
 				3FF80F402A141D0A00C02D70 /* MessageView.swift in Sources */,
 				3FF80F492A14221900C02D70 /* UserInputView.swift in Sources */,
 				3F09B4F12A1FDD970009ED1D /* ShoppingListView.swift in Sources */,
-				3FF80F462A14203000C02D70 /* UserInputButtonView.swift in Sources */,
-				3FF80F442A141F8B00C02D70 /* ActionButtonView.swift in Sources */,
 				3FD6B19C2A00B109004B1F33 /* APIClient.swift in Sources */,
 				3FF80F422A141D4A00C02D70 /* ConversationView.swift in Sources */,
 			);
