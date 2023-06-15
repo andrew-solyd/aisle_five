@@ -16,57 +16,84 @@ struct ConversationView: View {
     @Binding var userInput: String
     @Binding var isShowingShoppingList: Bool
     let _userMessage: userMessage
-    @State private var lastSeenMessageIndex: Int?
     @State private var scrollOffset: CGFloat = 0
     @State private var dragOffset: CGFloat = 0
     @State private var isAtBottom: Bool = true
+    @State var wholeSize: CGSize = .zero
+    @State var scrollViewSize: CGSize = .zero
     
     var body: some View {
         ZStack(alignment: .top) {
-            ScrollViewReader { scrollViewProxy in
+            ChildSizeReader(size: $wholeSize) {
                 ScrollView {
-                    VStack(spacing: 8) {
-                        ForEach(conversation.indices, id: \.self) { index in
-                            MessageView(message: conversation[index])
-                                .onAppear {
-                                    lastSeenMessageIndex = index
-                                    if lastSeenMessageIndex == conversation.count - 1 {
-                                        isTextEditorVisible = true
-                                    }
+                    ChildSizeReader(size: $scrollViewSize) {
+                        VStack(spacing: 8) {
+                            ForEach(conversation.indices, id: \.self) { index in
+                                MessageView(message: conversation[index])
+                            }
+                            UserInputView(userInput: $userInput,
+                                          isWaitingForResponse: $isWaitingForResponse,
+                                          dotCount: $dotCount,
+                                          conversation: $conversation,
+                                          waitingMessageIndex: $waitingMessageIndex,
+                                          isTextEditorVisible: $isTextEditorVisible,
+                                          _userMessage: _userMessage)
+                            Spacer()
+                        }
+                        .padding()
+                        .frame(maxHeight: .infinity)
+                        .background(
+                            GeometryReader { geometry in
+                                Color.clear
+                                // .preference(key: ViewOffsetKey.self, value: -geometry.frame(in: .named("scrollView")).minY)
+                                    .preference(
+                                        key: ViewOffsetKey.self,
+                                        value: -1 * geometry.frame(in: .named("scrollView")).origin.y
+                                    )
+                            }
+                        )
+                        .onPreferenceChange(ViewOffsetKey.self) { offset in
+                            // Store the previous offset
+                            let previousOffset = scrollOffset
+                            // Update the current scroll offset
+                            scrollOffset = offset
+
+                            print("scrollOffset: \(scrollOffset)")
+                            print("previousOffset: \(previousOffset)")
+                            print("scrollViewSize height: \(scrollViewSize.height)")
+                            print("wholeSize height: \(wholeSize.height)")
+                            
+                            if scrollViewSize.height <= wholeSize.height {
+                                print("in the pocket")
+                                // Not enough content to scroll, so don't change the keyboard visibility
+                                if scrollOffset < 0 {
+                                    // Swipe Down / Scroll Up to hide the keyboard
+                                    isTextEditorVisible = false
+                                } else if scrollOffset > 0 {
+                                    // User has reached the bottom of the ScrollView, show the keyboard
+                                    isTextEditorVisible = true
                                 }
+                            } else {
+                                print("not in the pocket")
+                                if scrollOffset < previousOffset {
+                                    // Swipe Down / Scroll Up to hide the keyboard
+                                    isTextEditorVisible = false
+                                } else if scrollOffset >= scrollViewSize.height - wholeSize.height {
+                                    // User has reached the bottom of the ScrollView, show the keyboard
+                                    isTextEditorVisible = true
+                                }
+                            }
                         }
-                        UserInputView(userInput: $userInput,
-                                      isWaitingForResponse: $isWaitingForResponse,
-                                      dotCount: $dotCount,
-                                      conversation: $conversation,
-                                      waitingMessageIndex: $waitingMessageIndex,
-                                      isTextEditorVisible: $isTextEditorVisible,
-                                      _userMessage: _userMessage)
-                        Spacer()
                     }
-                    .padding()
-                    .frame(maxHeight: .infinity)
-                    .background(
-                        GeometryReader { geometry in
-                            Color.clear
-                                .preference(key: ViewOffsetKey.self, value: -geometry.frame(in: .named("scrollView")).minY)
-                        }
-                    )
                 }
                 .keyboardAdaptive()
                 .coordinateSpace(name: "scrollView")
-                .onPreferenceChange(ViewOffsetKey.self) { offset in
-                    let previousOffset = scrollOffset
-                    scrollOffset = offset
-                    if scrollOffset <= 0 { return }
-                    if scrollOffset > previousOffset {
-                        isAtBottom = true
-                    } else if scrollOffset < previousOffset {
-                        isAtBottom = false
-                    }
-                    // Swipe Down / Scroll Up
-                    if !isAtBottom {
+                .onChange(of: isWaitingForResponse) { newValue in
+                    // If we're waiting for a response, hide the keyboard
+                    if newValue {
                         isTextEditorVisible = false
+                    } else {
+                        isTextEditorVisible = true
                     }
                 }
             }
@@ -100,10 +127,41 @@ struct ConversationView: View {
     }
 }
 
+
 struct ViewOffsetKey: PreferenceKey {
-    static var defaultValue: CGFloat = 0
-    static func reduce(value: inout Value, nextValue: () -> Value) {
-        value += nextValue()
-    }
+  typealias Value = CGFloat
+  static var defaultValue = CGFloat.zero
+  static func reduce(value: inout Value, nextValue: () -> Value) {
+    value += nextValue()
+  }
 }
 
+struct ChildSizeReader<Content: View>: View {
+  @Binding var size: CGSize
+
+  let content: () -> Content
+  var body: some View {
+    ZStack {
+      content().background(
+        GeometryReader { proxy in
+          Color.clear.preference(
+            key: SizePreferenceKey.self,
+            value: proxy.size
+          )
+        }
+      )
+    }
+    .onPreferenceChange(SizePreferenceKey.self) { preferences in
+      self.size = preferences
+    }
+  }
+}
+
+struct SizePreferenceKey: PreferenceKey {
+  typealias Value = CGSize
+  static var defaultValue: Value = .zero
+
+  static func reduce(value _: inout Value, nextValue: () -> Value) {
+    _ = nextValue()
+  }
+}

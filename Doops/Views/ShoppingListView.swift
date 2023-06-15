@@ -10,6 +10,7 @@ import SwiftUI
 struct ShoppingListView: View {
     @EnvironmentObject var shoppingList: ShoppingList
     @Binding var isShowingShoppingList: Bool
+    @State private var isInEditMode: Bool = false
     
     var body: some View {
         VStack {
@@ -32,6 +33,19 @@ struct ShoppingListView: View {
                                         .foregroundColor(Color.systemFontColor)
                                     
                                     Spacer()
+                                    
+                                    if isInEditMode {
+                                        if let index = shoppingList.products.firstIndex(where: { $0.id == product.id }) {
+                                            Button(action: {
+                                                shoppingList.products.remove(at: index)
+                                            }) {
+                                                Image(systemName: "minus.circle")
+                                                    .foregroundColor(.red)
+                                                    .padding(.trailing, 10)
+                                            }
+                                        }
+                                    }
+
                                 }
                                 .frame(maxWidth: .infinity)
                             }
@@ -59,27 +73,35 @@ struct ShoppingListView: View {
                 }
                 */
             }
-            
-            HStack {
-                ButtonView(action: {
-                    // Goes back to conversation view
-                    isShowingShoppingList = false
-                }, imageName: "back-icon")
-                Spacer()
-                ButtonView(action: {
-                    // Manually add item to ShoppingList model
-                }, imageName: "add-icon")
-                Spacer()
-                ButtonView(action: {
-                    // Remove selected items from ShoppingList model
-                }, imageName: "remove-icon")
-                Spacer()
-                ButtonView(action: {
-                    shoppingList.products.removeAll()
-                }, imageName: "delete-icon")
+            if isInEditMode {
+                Button("Done") {
+                    isInEditMode.toggle()
+                }
+                .padding(30)
+                .frame(maxWidth: .infinity)
+            } else {
+                HStack {
+                    ButtonView(action: {
+                        // Goes back to conversation view
+                        isShowingShoppingList = false
+                    }, imageName: "back-icon")
+                    Spacer()
+                    ButtonView(action: {
+                        // Manually add item to ShoppingList model
+                    }, imageName: "add-icon")
+                    Spacer()
+                    ButtonView(action: {
+                        // Enter edit mode
+                        isInEditMode.toggle()
+                    }, imageName: "remove-icon")
+                    Spacer()
+                    ButtonView(action: {
+                        shoppingList.products.removeAll()
+                    }, imageName: "delete-icon")
+                }
+                .padding(30) // Padding of 30px around the HStack
+                .frame(maxWidth: .infinity)
             }
-            .padding(30) // Padding of 30px around the HStack
-            .frame(maxWidth: .infinity)
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .background(Color.bodyColor)
