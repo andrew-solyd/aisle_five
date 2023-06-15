@@ -76,7 +76,7 @@ struct ConversationView: View {
                                             isTextEditorVisible = true
                                             lastKeyboardVisibilityChangeDate = Date()
                                         }
-                                } else if delta > 10  &&  contentHeight < 500 {
+                                } else if delta > 10  &&  contentHeight < ( geometry.frame(in: .named("scrollView")).height - 50 ) {
                                     // User has reached the bottom of the ScrollView, show the keyboard
                                     DispatchQueue.main.async {
                                         isTextEditorVisible = true
