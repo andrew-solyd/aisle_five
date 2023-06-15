@@ -112,6 +112,7 @@ struct ContentView: View {
                 isLoading = false
             }
         }
+        .background(Color.bodyColor.edgesIgnoringSafeArea(.all))
     }
 }
 

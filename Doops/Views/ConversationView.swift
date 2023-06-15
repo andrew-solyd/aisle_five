@@ -17,16 +17,14 @@ struct ConversationView: View {
     @Binding var isShowingShoppingList: Bool
     let _userMessage: userMessage
     @State private var scrollOffset: CGFloat = 0
-    @State private var dragOffset: CGFloat = 0
-    @State private var isAtBottom: Bool = true
-    @State var wholeSize: CGSize = .zero
-    @State var scrollViewSize: CGSize = .zero
+    @State private var lastKeyboardVisibilityChangeDate = Date(timeIntervalSince1970: 0)
+    @State private var contentHeight: CGFloat = 0
     
     var body: some View {
         ZStack(alignment: .top) {
-            ChildSizeReader(size: $wholeSize) {
-                ScrollView {
-                    ChildSizeReader(size: $scrollViewSize) {
+            GeometryReader { geometry in
+                ScrollViewReader { scrollView in
+                    ScrollView {
                         VStack(spacing: 8) {
                             ForEach(conversation.indices, id: \.self) { index in
                                 MessageView(message: conversation[index])
@@ -40,60 +38,64 @@ struct ConversationView: View {
                                           _userMessage: _userMessage)
                             Spacer()
                         }
-                        .padding()
-                        .frame(maxHeight: .infinity)
                         .background(
                             GeometryReader { geometry in
                                 Color.clear
-                                // .preference(key: ViewOffsetKey.self, value: -geometry.frame(in: .named("scrollView")).minY)
-                                    .preference(
-                                        key: ViewOffsetKey.self,
-                                        value: -1 * geometry.frame(in: .named("scrollView")).origin.y
-                                    )
+                                    .onAppear {
+                                        scrollOffset = -geometry.frame(in: .named("scrollView")).origin.y
+                                        contentHeight = geometry.size.height
+                                    }
+                                    .onChange(of: geometry.size.height) { newHeight in
+                                        contentHeight = newHeight
+                                    }
+                                    .preference(key: ViewOffsetKey.self, value: -geometry.frame(in: .named("scrollView")).origin.y)
                             }
                         )
+                        .padding()
+                        .frame(maxHeight: .infinity)
                         .onPreferenceChange(ViewOffsetKey.self) { offset in
-                            // Store the previous offset
-                            let previousOffset = scrollOffset
-                            // Update the current scroll offset
+                            let delta = offset - scrollOffset
                             scrollOffset = offset
-
-                            print("scrollOffset: \(scrollOffset)")
-                            print("previousOffset: \(previousOffset)")
-                            print("scrollViewSize height: \(scrollViewSize.height)")
-                            print("wholeSize height: \(wholeSize.height)")
                             
-                            if scrollViewSize.height <= wholeSize.height {
-                                print("in the pocket")
-                                // Not enough content to scroll, so don't change the keyboard visibility
-                                if scrollOffset < 0 {
+                            print("delta: \(delta)")
+                            print("ratio: \(scrollOffset / geometry.frame(in: .named("scrollView")).height)")
+                            print("contentHeight: \(contentHeight)")
+                            
+                            let keyboardVisibilityChangeDelay: TimeInterval = 0.75
+                            
+                            if Date().timeIntervalSince(lastKeyboardVisibilityChangeDate) > keyboardVisibilityChangeDelay && !isWaitingForResponse {
+                                if delta < -5 {
                                     // Swipe Down / Scroll Up to hide the keyboard
-                                    isTextEditorVisible = false
-                                } else if scrollOffset > 0 {
+                                    DispatchQueue.main.async {
+                                        isTextEditorVisible = false
+                                        lastKeyboardVisibilityChangeDate = Date()
+                                    }
+                                } else if delta > 10 && ( scrollOffset / geometry.frame(in: .named("scrollView")).height ) > 0.55 {
+                                        // User has reached the bottom of the ScrollView, show the keyboard
+                                        DispatchQueue.main.async {
+                                            isTextEditorVisible = true
+                                            lastKeyboardVisibilityChangeDate = Date()
+                                        }
+                                } else if delta > 10  &&  contentHeight < 500 {
                                     // User has reached the bottom of the ScrollView, show the keyboard
-                                    isTextEditorVisible = true
-                                }
-                            } else {
-                                print("not in the pocket")
-                                if scrollOffset < previousOffset {
-                                    // Swipe Down / Scroll Up to hide the keyboard
-                                    isTextEditorVisible = false
-                                } else if scrollOffset >= scrollViewSize.height - wholeSize.height {
-                                    // User has reached the bottom of the ScrollView, show the keyboard
-                                    isTextEditorVisible = true
+                                    DispatchQueue.main.async {
+                                        isTextEditorVisible = true
+                                        lastKeyboardVisibilityChangeDate = Date()
+                                    }
                                 }
                             }
                         }
                     }
-                }
-                .keyboardAdaptive()
-                .coordinateSpace(name: "scrollView")
-                .onChange(of: isWaitingForResponse) { newValue in
-                    // If we're waiting for a response, hide the keyboard
-                    if newValue {
-                        isTextEditorVisible = false
-                    } else {
-                        isTextEditorVisible = true
+                    .padding(.bottom, isTextEditorVisible ? 100 : 0)
+                    .keyboardAdaptive()
+                    .coordinateSpace(name: "scrollView")
+                    .onChange(of: isWaitingForResponse) { newValue in
+                        // If we're waiting for a response, hide the keyboard
+                        if newValue {
+                            isTextEditorVisible = false
+                        } else {
+                            isTextEditorVisible = true
+                        }
                     }
                 }
             }
@@ -127,41 +129,10 @@ struct ConversationView: View {
     }
 }
 
-
 struct ViewOffsetKey: PreferenceKey {
   typealias Value = CGFloat
   static var defaultValue = CGFloat.zero
   static func reduce(value: inout Value, nextValue: () -> Value) {
     value += nextValue()
-  }
-}
-
-struct ChildSizeReader<Content: View>: View {
-  @Binding var size: CGSize
-
-  let content: () -> Content
-  var body: some View {
-    ZStack {
-      content().background(
-        GeometryReader { proxy in
-          Color.clear.preference(
-            key: SizePreferenceKey.self,
-            value: proxy.size
-          )
-        }
-      )
-    }
-    .onPreferenceChange(SizePreferenceKey.self) { preferences in
-      self.size = preferences
-    }
-  }
-}
-
-struct SizePreferenceKey: PreferenceKey {
-  typealias Value = CGSize
-  static var defaultValue: Value = .zero
-
-  static func reduce(value _: inout Value, nextValue: () -> Value) {
-    _ = nextValue()
   }
 }
