@@ -11,78 +11,124 @@ struct ShoppingListView: View {
     @EnvironmentObject var shoppingList: ShoppingList
     @Binding var isShowingShoppingList: Bool
     @State private var isInEditMode: Bool = false
+    @State private var isPixelVisible = false
     
     var body: some View {
         VStack {
             ZStack {
-                ScrollView {
-                    VStack(alignment: .leading, spacing: 8) {
-                        ForEach($shoppingList.products) { $product in
-                            Button(action: {
-                                product.isChecked.toggle()
-                            }) {
-                                HStack {
-                                    // Square box that toggles filled/empty state
-                                    Image(systemName: product.isChecked ? "checkmark.square.fill" : "square")
-                                        .foregroundColor(Color.systemFontColor)
-
-                                    // Product name, strikethrough if the product is checked
-                                    Text(product.name)
-                                        .strikethrough(product.isChecked, color: .black)
-                                        .font(Font.custom("Parclo Serif Medium", size: 18))
-                                        .foregroundColor(Color.systemFontColor)
-                                    
-                                    Spacer()
-                                    
-                                    if isInEditMode {
-                                        if let index = shoppingList.products.firstIndex(where: { $0.id == product.id }) {
-                                            Button(action: {
-                                                shoppingList.products.remove(at: index)
-                                            }) {
-                                                Image(systemName: "minus.circle")
-                                                    .foregroundColor(.red)
-                                                    .padding(.trailing, 10)
-                                            }
-                                        }
-                                    }
-
-                                }
-                                .frame(maxWidth: .infinity)
-                            }
-                            .padding(10)
-                            .background(
-                                RoundedRectangle(cornerRadius: 10)
-                                    .fill(Color.bodyColor)
-                                    .shadow(color: Color.gray.opacity(0.2), radius: 4, x: 2, y: 2)
-                                    .overlay(RoundedRectangle(cornerRadius: 10)
-                                                .stroke(Color(red: 217/255, green: 225/255, blue: 233/255), lineWidth: 0.5))
-                            )
-                        }
-                        .padding(.horizontal, 15)
-                    }
-                }
-                /*
-                VStack {
-                    LinearGradient(gradient: Gradient(colors: [Color.white.opacity(1.0), Color.white.opacity(0.0)]),
-                                   startPoint: .top,
-                                   endPoint: .bottom)
-                        .frame(height: 100) // Adjust the height to control the fade-out length
-                        .ignoresSafeArea(edges: .top)
-                        .alignmentGuide(.top, computeValue: { _ in 0 })
-                    Spacer()
-                }
-                */
+                shoppingListContent
             }
-            if isInEditMode {
+            buttonBar
+            Rectangle()
+                .foregroundColor(.clear)
+                .frame(width: 1, height: 1)
+                .opacity(isPixelVisible ? 1 : 0)
+        }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .background(Color.bodyColor)
+    }
+    
+    var shoppingListContent: some View {
+        ScrollView {
+            VStack(alignment: .leading, spacing: 8) {
+                ForEach(shoppingList.products.keys.sorted(), id: \.self) { category in
+                    productCategorySection(category)
+                }
+            }
+        }
+    }
+    
+    func productCategorySection(_ category: String) -> some View {
+        Section(header: Text(category)
+                    .font(Font.custom("Parclo Serif Black", size: 22))
+                    .foregroundColor(Color.systemFontColor)
+                    .padding(.vertical, 10)
+                    .padding(.leading, 20)) {
+            ForEach(shoppingList.products[category] ?? [], id: \.id) { product in
+                productButton(product)
+            }
+            .padding(.horizontal, 15)
+        }
+    }
+    
+    func productButton(_ product: Product) -> some View {
+        Button(action: {
+            product.isChecked.toggle()
+            isPixelVisible.toggle()
+        }) {
+            HStack {
+                Image(systemName: product.isChecked ? "checkmark.square.fill" : "square")
+                    .foregroundColor(Color.systemFontColor)
+                
+                Text(product.name)
+                    .strikethrough(product.isChecked, color: .black)
+                    .font(Font.custom("Parclo Serif Medium", size: 18))
+                    .foregroundColor(Color.systemFontColor)
+                
+                Spacer()
+                
+                if isInEditMode {
+                    removeProductButton(product)
+                }
+                
+            }
+            .frame(maxWidth: .infinity)
+        }
+        .padding(10)
+        .background(
+            RoundedRectangle(cornerRadius: 10)
+                .fill(Color.bodyColor)
+                .shadow(color: Color.gray.opacity(0.2), radius: 4, x: 2, y: 2)
+                .overlay(RoundedRectangle(cornerRadius: 10)
+                .stroke(Color(red: 217/255, green: 225/255, blue: 233/255), lineWidth: 0.5))
+        )
+    }
+    
+    func removeProductButton(_ product: Product) -> some View {
+        Button(action: {
+                removeProduct(product)
+            }) {
+                Image(systemName: "minus.circle")
+                    .foregroundColor(.red)
+                    .padding(.trailing, 10)
+                    .frame(width: 15, height: 15)
+            }
+    }
+    
+    func removeProduct(_ product: Product) {
+        for category in shoppingList.products.keys {
+            if let index = shoppingList.products[category]?.firstIndex(where: { $0.id == product.id }) {
+                shoppingList.products[category]?.remove(at: index)
+                if shoppingList.products[category]?.isEmpty ?? false {
+                    shoppingList.products.removeValue(forKey: category)
+                }
+            }
+        }
+    }
+    
+    func removeAllProducts() {
+        for category in shoppingList.products.keys {
+            shoppingList.products[category]?.removeAll()
+            if shoppingList.products[category]?.isEmpty ?? false {
+                shoppingList.products.removeValue(forKey: category)
+            }
+        }
+    }
+    
+    var buttonBar: some View {
+        if isInEditMode {
+            return AnyView(
                 Button("Done") {
                     isInEditMode.toggle()
                 }
-                .padding(30)
+                .padding(.vertical, 10)
+                .padding(.horizontal, 30)
                 .frame(maxWidth: .infinity)
-            } else {
+            )
+        } else {
+            return AnyView(
                 HStack {
                     ButtonView(action: {
-                        // Goes back to conversation view
                         isShowingShoppingList = false
                     }, imageName: "back-icon")
                     Spacer()
@@ -91,20 +137,18 @@ struct ShoppingListView: View {
                     }, imageName: "add-icon")
                     Spacer()
                     ButtonView(action: {
-                        // Enter edit mode
                         isInEditMode.toggle()
                     }, imageName: "remove-icon")
                     Spacer()
                     ButtonView(action: {
-                        shoppingList.products.removeAll()
+                        removeAllProducts()
                     }, imageName: "delete-icon")
                 }
-                .padding(30) // Padding of 30px around the HStack
+                .padding(.vertical, 10)
+                .padding(.horizontal, 30)
                 .frame(maxWidth: .infinity)
-            }
+            )
         }
-        .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .background(Color.bodyColor)
     }
 }
 
@@ -123,4 +167,3 @@ struct ButtonView: View {
         }
     }
 }
-

@@ -61,7 +61,7 @@ struct HighlightedText: View {
             
         // Set background color
         let itemName = String(text)
-        let isInShoppingList = shoppingList.products.contains(where: { $0.name == itemName })
+        let isInShoppingList = shoppingList.products.values.flatMap { $0 }.contains(where: { $0.name == itemName })
         let highlightColor = isInShoppingList ?
             Color(.sRGB, red: 177/255, green: 255/255, blue: 159/255, opacity: 0.5) : // Light green for items in the shopping list
             Color(.sRGB, red: 250/255, green: 255/255, blue: 159/255, opacity: 0.5)    // Light yellow for items not in the shopping list
@@ -112,7 +112,6 @@ struct MessageView: View {
             .lineSpacing(_:5)
             .kerning(0.5)
             .onOpenURL { url in
-                print("URL CLICKED", url)
                 if let urlString = url.absoluteString.removingPercentEncoding,
                    urlString.hasPrefix("myapp://") {
                     let text = String(urlString.dropFirst(8))
@@ -123,20 +122,20 @@ struct MessageView: View {
     }
 
     func toggleInShoppingList(_ text: String) {
-        let currentTime = Date()
-        if currentTime.timeIntervalSince(self.lastAddedTime) < 0.6 {
-            return
-        }
-        self.lastAddedTime = currentTime
 
         let itemName = text.replacingOccurrences(of: "+", with: " ")
         
-        if let existingIndex = shoppingList.products.firstIndex(where: { $0.name == itemName }) {
-            print("REMOVED", itemName)
-            shoppingList.products.remove(at: existingIndex)
-        } else {
-            print("ADDED", itemName)
-            shoppingList.products.append(Product(name: itemName, isChecked: false))
+        // Searching for the product in all categories
+        for (category, products) in shoppingList.products {
+            if let existingIndex = products.firstIndex(where: { $0.name == itemName }) {
+                shoppingList.products[category]?.remove(at: existingIndex)
+                return
+            }
         }
+
+        // If product wasn't found, let's add it. Here the category is hardcoded for simplicity.
+        // In your actual app, you should use the appropriate category for the product.
+        let newProduct = Product(name: itemName, category: "To Sort")
+        shoppingList.products["To Sort", default: []].append(newProduct)
     }
 }

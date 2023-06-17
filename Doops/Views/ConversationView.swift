@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct ConversationView: View {
+    @EnvironmentObject var shoppingList: ShoppingList
     @Binding var conversation: [Message]
     @Binding var isWaitingForResponse: Bool
     @Binding var dotCount: Int
@@ -57,9 +58,9 @@ struct ConversationView: View {
                             let delta = offset - scrollOffset
                             scrollOffset = offset
                             
-                            print("delta: \(delta)")
-                            print("ratio: \(scrollOffset / geometry.frame(in: .named("scrollView")).height)")
-                            print("contentHeight: \(contentHeight)")
+                            // print("delta: \(delta)")
+                            // print("ratio: \(scrollOffset / geometry.frame(in: .named("scrollView")).height)")
+                            // print("contentHeight: \(contentHeight)")
                             
                             let keyboardVisibilityChangeDelay: TimeInterval = 0.75
                             
