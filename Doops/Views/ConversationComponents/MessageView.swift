@@ -9,6 +9,7 @@ import SwiftUI
 
 struct HighlightedText: View {
     @EnvironmentObject var shoppingList: ShoppingList
+
     let message: Message
 
     var body: some View {

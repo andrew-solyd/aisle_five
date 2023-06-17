@@ -33,7 +33,7 @@ struct ContentView: View {
     @State private var dotCount: Int = 0
     @State private var waitingMessageIndex: Int? = nil
     @State private var isShowingShoppingList = false
-    @StateObject private var shoppingList = ShoppingList()
+    @StateObject private var shoppingList = ShoppingList.shared
     @FocusState private var isFocused: Bool
     
     var body: some View {
@@ -42,7 +42,7 @@ struct ContentView: View {
                 LoadingView()
             } else if isShowingShoppingList {
                 ShoppingListView(isShowingShoppingList: $isShowingShoppingList)
-                    .environmentObject(shoppingList)
+                    .environmentObject(ShoppingList.shared)
             } else {
                 VStack {
                     ConversationView(conversation: $conversation,
@@ -53,6 +53,7 @@ struct ContentView: View {
                                      userInput: $userInput,
                                      isShowingShoppingList: $isShowingShoppingList,
                                      _userMessage: _userMessage)
+                    .environmentObject(ShoppingList.shared)
                 }
                 .onAppear {
                     if !isInitiliazied {

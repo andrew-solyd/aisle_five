@@ -22,6 +22,8 @@ class Product: Identifiable, ObservableObject {
 }
 
 class ShoppingList: ObservableObject {
+    static let shared = ShoppingList()
+    
     @Published var products: [String: [Product]] = [
         "Dairy": ["Milk", "Eggs", "Butter", "Cheese", "Yogurt"].map { Product(name: $0, category: "Dairy") },
         "Produce": ["Apples", "Bananas", "Tomatoes", "Potatoes", "Carrots", "Onions", "Garlic", "Spinach", "Broccoli", "Peas", "Bell Peppers", "Cucumbers", "Lettuce", "Zucchini", "Strawberries", "Blueberries"].map { Product(name: $0, category: "Produce") },

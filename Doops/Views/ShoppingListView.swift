@@ -9,6 +9,7 @@ import SwiftUI
 
 struct ShoppingListView: View {
     @EnvironmentObject var shoppingList: ShoppingList
+
     @Binding var isShowingShoppingList: Bool
     @State private var isInEditMode: Bool = false
     @State private var isPixelVisible = false

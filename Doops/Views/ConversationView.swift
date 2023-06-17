@@ -8,7 +8,9 @@
 import SwiftUI
 
 struct ConversationView: View {
+    
     @EnvironmentObject var shoppingList: ShoppingList
+
     @Binding var conversation: [Message]
     @Binding var isWaitingForResponse: Bool
     @Binding var dotCount: Int
@@ -29,6 +31,7 @@ struct ConversationView: View {
                         VStack(spacing: 8) {
                             ForEach(conversation.indices, id: \.self) { index in
                                 MessageView(message: conversation[index])
+                                    .environmentObject(ShoppingList.shared)
                             }
                             UserInputView(userInput: $userInput,
                                           isWaitingForResponse: $isWaitingForResponse,
