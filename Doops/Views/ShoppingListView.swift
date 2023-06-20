@@ -37,6 +37,18 @@ struct ShoppingListView: View {
                 }
             }
         }
+        .onAppear {
+            // Check if there's an ongoing sorting operation
+            guard !listCopilot.isSortingInProgress else {
+                return
+            }
+            // Check if there are items in the "To Sort" category
+            guard let toSortItems = shoppingList.products["To Sort"], !toSortItems.isEmpty else {
+                return
+            }            
+            // Start sorting operation
+            listCopilot.sortNewItems()
+        }
     }
     
     func productCategorySection(_ category: String) -> some View {
@@ -135,6 +147,7 @@ struct ShoppingListView: View {
                     Spacer()
                     ButtonView(action: {
                         // Manually add item to ShoppingList model
+                        listCopilot.sortNewItems()
                     }, imageName: "add-icon")
                     Spacer()
                     ButtonView(action: {

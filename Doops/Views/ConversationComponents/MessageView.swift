@@ -123,9 +123,7 @@ struct MessageView: View {
     }
 
     func toggleInShoppingList(_ text: String) {
-
         let itemName = text.replacingOccurrences(of: "+", with: " ")
-        
         // Searching for the product in all categories
         for (category, products) in shoppingList.products {
             if let existingIndex = products.firstIndex(where: { $0.name == itemName }) {
@@ -133,9 +131,7 @@ struct MessageView: View {
                 return
             }
         }
-
-        // If product wasn't found, let's add it. Here the category is hardcoded for simplicity.
-        // In your actual app, you should use the appropriate category for the product.
+        // If product wasn't found, let's add it as To Sort
         let newProduct = Product(name: itemName, category: "To Sort")
         shoppingList.products["To Sort", default: []].append(newProduct)
     }
