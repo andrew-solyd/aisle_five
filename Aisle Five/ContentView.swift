@@ -20,6 +20,7 @@ extension Color {
 
 struct ContentView: View {    
         
+    let conversationHistory = ConversationHistory()
     let _userMessage = userMessage()
     let timer = Timer.publish(every: 0.5, on: .main, in: .common).autoconnect()
     
@@ -57,16 +58,9 @@ struct ContentView: View {
                 }
                 .onAppear {
                     if !isInitiliazied {
-                        _userMessage.resetAgent { result in
-                            switch result {
-                            case .success(let message):
-                                DispatchQueue.main.async {
-                                    print(message)
-                                }
-                            case .failure(let error):
-                                print("Error resetting agent: \(error.localizedDescription)")
-                            }
-                        }
+                        // reset conversationHistory
+                        conversationHistory.reset()
+                        //
                         isWaitingForResponse = true
                         dotCount = 0
                         waitingMessageIndex = conversation.endIndex

@@ -61,6 +61,47 @@ struct listCopilot {
     }
 }
 
+struct shopCopilot {
+    
+    #if DEBUG
+        static let baseURL = URL(string: "http://localhost:8080")!
+    #else
+        static let baseURL = URL(string: "https://solyd-open-api.fly.dev")!
+    #endif
+    
+    func initializeAgent(completion: @escaping (Result<String, Error>) -> Void) {
+        let url = userMessage.baseURL.appendingPathComponent("initialize")
+        
+        var request = URLRequest(url: url)
+        request.httpMethod = "POST"
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        
+        URLSession.shared.dataTask(with: request) { data, response, error in
+            if let error = error {
+                completion(.failure(error))
+                return
+            }
+            
+            guard let data = data else {
+                completion(.failure(APIError.requestFailed))
+                return
+            }
+            
+            do {
+                let jsonResponse = try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any]
+                if let systemInstructions = jsonResponse?["systemInstructions"] as? String,
+                   let chatGPTresponse = jsonResponse?["chatGPTresponse"] as? String {
+                    completion(.success((systemInstructions, chatGPTresponse)))
+                } else {
+                    completion(.failure(APIError.invalidResponse))
+                }
+            } catch {
+                completion(.failure(error))
+            }
+        }.resume()
+    }
+}
+
 struct userMessage {
     
     #if DEBUG
@@ -103,38 +144,8 @@ struct userMessage {
         task.resume()
     }
     
-    func resetAgent(completion: @escaping (Result<String, Error>) -> Void) {
-        let url = userMessage.baseURL.appendingPathComponent("reset-agent")
-        var request = URLRequest(url: url)
-        request.httpMethod = "POST"
-        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-
-        URLSession.shared.dataTask(with: request) { data, response, error in
-            if let error = error {
-                completion(.failure(error))
-                return
-            }
-            
-            guard let data = data else {
-                completion(.failure(APIError.requestFailed))
-                return
-            }
-            
-            do {
-                let jsonResponse = try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any]
-                if let message = jsonResponse?["message"] as? String {
-                    completion(.success(message))
-                } else {
-                    completion(.failure(APIError.invalidResponse))
-                }
-            } catch {
-                completion(.failure(error))
-            }
-        }.resume()
-    }
-    
     func initializeAgent(completion: @escaping (Result<String, Error>) -> Void) {
-        let url = userMessage.baseURL.appendingPathComponent("initialize-agent")
+        let url = userMessage.baseURL.appendingPathComponent("initialize")
         
         var request = URLRequest(url: url)
         request.httpMethod = "POST"
