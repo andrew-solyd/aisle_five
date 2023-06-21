@@ -8,6 +8,7 @@
 import Foundation
 
 class ConversationHistory: ObservableObject {
+    static let shared = ConversationHistory()
     
     @Published var messages: [[String: String]]
     

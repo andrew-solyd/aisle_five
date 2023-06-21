@@ -39,7 +39,7 @@ struct ShoppingListView: View {
         }
         .onAppear {
             // Check if there's an ongoing sorting operation
-            guard !listCopilot.isSortingInProgress else {
+            guard !SmartListAPI.isSortingInProgress else {
                 return
             }
             // Check if there are items in the "To Sort" category
@@ -47,7 +47,7 @@ struct ShoppingListView: View {
                 return
             }            
             // Start sorting operation
-            listCopilot.sortNewItems()
+            SmartListAPI.sortItems()
         }
     }
     
@@ -147,7 +147,7 @@ struct ShoppingListView: View {
                     Spacer()
                     ButtonView(action: {
                         // Manually add item to ShoppingList model
-                        listCopilot.sortNewItems()
+
                     }, imageName: "add-icon")
                     Spacer()
                     ButtonView(action: {

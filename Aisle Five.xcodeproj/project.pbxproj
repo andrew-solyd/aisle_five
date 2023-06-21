@@ -18,14 +18,7 @@
 		3F606F0C2A005D9B0054331B /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 3F606F0B2A005D9B0054331B /* Preview Assets.xcassets */; };
 		3F606F0E2A005D9B0054331B /* Persistence.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F606F0D2A005D9B0054331B /* Persistence.swift */; };
 		3F606F112A005D9B0054331B /* Doops.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 3F606F0F2A005D9B0054331B /* Doops.xcdatamodeld */; };
-		3F606F1B2A005DE00054331B /* BlinkReceiptStatic.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3F606F192A005DDE0054331B /* BlinkReceiptStatic.xcframework */; };
-		3F606F1C2A005DE00054331B /* BlinkReceiptStatic.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 3F606F192A005DDE0054331B /* BlinkReceiptStatic.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		3F606F242A00624B0054331B /* BlinkEReceiptStatic.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3F606F202A0062450054331B /* BlinkEReceiptStatic.xcframework */; };
-		3F606F252A00624B0054331B /* BlinkEReceiptStatic.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 3F606F202A0062450054331B /* BlinkEReceiptStatic.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		3F606F262A00624C0054331B /* AccountLinking.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3F606F1F2A0062450054331B /* AccountLinking.xcframework */; };
-		3F606F272A00624C0054331B /* AccountLinking.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 3F606F1F2A0062450054331B /* AccountLinking.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		3F606F282A00624E0054331B /* MailCore.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3F606F1E2A0062450054331B /* MailCore.xcframework */; };
-		3F606F292A00624E0054331B /* MailCore.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 3F606F1E2A0062450054331B /* MailCore.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		3F6F44442A42986B0023EDB9 /* Initialization.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F6F44432A42986B0023EDB9 /* Initialization.swift */; };
 		3F73DE942A2ECFB20018CE78 /* ParcloSerif-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 3F73DE932A2ECFB00018CE78 /* ParcloSerif-Regular.ttf */; };
 		3F73DE9C2A2ED0550018CE78 /* ParcloSerif-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 3F73DE962A2ED0550018CE78 /* ParcloSerif-Bold.ttf */; };
 		3F73DE9D2A2ED0550018CE78 /* ParcloSerif-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 3F73DE972A2ED0550018CE78 /* ParcloSerif-Medium.ttf */; };
@@ -44,23 +37,6 @@
 		3FF80F492A14221900C02D70 /* UserInputView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FF80F482A14221900C02D70 /* UserInputView.swift */; };
 /* End PBXBuildFile section */
 
-/* Begin PBXCopyFilesBuildPhase section */
-		3F606F1D2A005DE00054331B /* Embed Frameworks */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = "";
-			dstSubfolderSpec = 10;
-			files = (
-				3F606F272A00624C0054331B /* AccountLinking.xcframework in Embed Frameworks */,
-				3F606F1C2A005DE00054331B /* BlinkReceiptStatic.xcframework in Embed Frameworks */,
-				3F606F252A00624B0054331B /* BlinkEReceiptStatic.xcframework in Embed Frameworks */,
-				3F606F292A00624E0054331B /* MailCore.xcframework in Embed Frameworks */,
-			);
-			name = "Embed Frameworks";
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-/* End PBXCopyFilesBuildPhase section */
-
 /* Begin PBXFileReference section */
 		3F09B4EE2A1FDA950009ED1D /* LoadingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingView.swift; sourceTree = "<group>"; };
 		3F09B4F02A1FDD970009ED1D /* ShoppingListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShoppingListView.swift; sourceTree = "<group>"; };
@@ -74,10 +50,7 @@
 		3F606F0B2A005D9B0054331B /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		3F606F0D2A005D9B0054331B /* Persistence.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Persistence.swift; sourceTree = "<group>"; };
 		3F606F102A005D9B0054331B /* Doops.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Doops.xcdatamodel; sourceTree = "<group>"; };
-		3F606F192A005DDE0054331B /* BlinkReceiptStatic.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; path = BlinkReceiptStatic.xcframework; sourceTree = "<group>"; };
-		3F606F1E2A0062450054331B /* MailCore.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; path = MailCore.xcframework; sourceTree = "<group>"; };
-		3F606F1F2A0062450054331B /* AccountLinking.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; path = AccountLinking.xcframework; sourceTree = "<group>"; };
-		3F606F202A0062450054331B /* BlinkEReceiptStatic.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; path = BlinkEReceiptStatic.xcframework; sourceTree = "<group>"; };
+		3F6F44432A42986B0023EDB9 /* Initialization.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Initialization.swift; sourceTree = "<group>"; };
 		3F73DE932A2ECFB00018CE78 /* ParcloSerif-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "ParcloSerif-Regular.ttf"; sourceTree = "<group>"; };
 		3F73DE962A2ED0550018CE78 /* ParcloSerif-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "ParcloSerif-Bold.ttf"; sourceTree = "<group>"; };
 		3F73DE972A2ED0550018CE78 /* ParcloSerif-Medium.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "ParcloSerif-Medium.ttf"; sourceTree = "<group>"; };
@@ -102,10 +75,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				3F606F1B2A005DE00054331B /* BlinkReceiptStatic.xcframework in Frameworks */,
-				3F606F262A00624C0054331B /* AccountLinking.xcframework in Frameworks */,
-				3F606F242A00624B0054331B /* BlinkEReceiptStatic.xcframework in Frameworks */,
-				3F606F282A00624E0054331B /* MailCore.xcframework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -115,12 +84,8 @@
 		3F09B4F42A1FE7D40009ED1D /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				3FD7129B2A42977D0086EE1E /* Conversation Data */,
 				3FD7129A2A4291FC0086EE1E /* Shopping List */,
-				3F9EC0FC2A41F2BD000358A1 /* Product.swift */,
-				3F09B4F52A1FE7EE0009ED1D /* ShoppingList.swift */,
-				3F9EC0FE2A41F2D2000358A1 /* SortedItems.swift */,
-				3F9EC1002A41F2E6000358A1 /* UpdateQueue.swift */,
-				3F9EC1022A420644000358A1 /* Conversation.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -128,10 +93,6 @@
 		3F606EF82A005D9A0054331B = {
 			isa = PBXGroup;
 			children = (
-				3F606F192A005DDE0054331B /* BlinkReceiptStatic.xcframework */,
-				3F606F1F2A0062450054331B /* AccountLinking.xcframework */,
-				3F606F202A0062450054331B /* BlinkEReceiptStatic.xcframework */,
-				3F606F1E2A0062450054331B /* MailCore.xcframework */,
 				3F606F032A005D9A0054331B /* Aisle Five */,
 				3F606F022A005D9A0054331B /* Products */,
 			);
@@ -152,7 +113,6 @@
 				3F606F082A005D9B0054331B /* Assets.xcassets */,
 				3F606F0F2A005D9B0054331B /* Doops.xcdatamodeld */,
 				3F606F042A005D9A0054331B /* DoopsApp.swift */,
-				3F606F062A005D9A0054331B /* ContentView.swift */,
 				3F73DE952A2ED0330018CE78 /* Font */,
 				3F09B4F42A1FE7D40009ED1D /* Models */,
 				3FF80F472A1421F800C02D70 /* Views */,
@@ -208,13 +168,27 @@
 		3FD7129A2A4291FC0086EE1E /* Shopping List */ = {
 			isa = PBXGroup;
 			children = (
+				3F9EC0FC2A41F2BD000358A1 /* Product.swift */,
+				3F09B4F52A1FE7EE0009ED1D /* ShoppingList.swift */,
+				3F9EC0FE2A41F2D2000358A1 /* SortedItems.swift */,
+				3F9EC1002A41F2E6000358A1 /* UpdateQueue.swift */,
 			);
 			path = "Shopping List";
+			sourceTree = "<group>";
+		};
+		3FD7129B2A42977D0086EE1E /* Conversation Data */ = {
+			isa = PBXGroup;
+			children = (
+				3F6F44432A42986B0023EDB9 /* Initialization.swift */,
+				3F9EC1022A420644000358A1 /* Conversation.swift */,
+			);
+			path = "Conversation Data";
 			sourceTree = "<group>";
 		};
 		3FF80F472A1421F800C02D70 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				3F606F062A005D9A0054331B /* ContentView.swift */,
 				3F09B4EE2A1FDA950009ED1D /* LoadingView.swift */,
 				3FF80F412A141D4A00C02D70 /* ConversationView.swift */,
 				3FC8F1992A36D8C1008DAB79 /* ConversationComponents */,
@@ -233,7 +207,6 @@
 				3F606EFD2A005D9A0054331B /* Sources */,
 				3F606EFE2A005D9A0054331B /* Frameworks */,
 				3F606EFF2A005D9A0054331B /* Resources */,
-				3F606F1D2A005DE00054331B /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
@@ -303,6 +276,7 @@
 				3FC8F1982A36C94C008DAB79 /* KeyboardAdaptive.swift in Sources */,
 				3F9EC1012A41F2E6000358A1 /* UpdateQueue.swift in Sources */,
 				3F606F0E2A005D9B0054331B /* Persistence.swift in Sources */,
+				3F6F44442A42986B0023EDB9 /* Initialization.swift in Sources */,
 				3F9EC0FD2A41F2BD000358A1 /* Product.swift in Sources */,
 				3F606F072A005D9A0054331B /* ContentView.swift in Sources */,
 				3F09B4F32A1FE28F0009ED1D /* AppInitializer.swift in Sources */,
@@ -446,12 +420,12 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_ASSET_PATHS = "\"Doops/Preview Content\"";
+				DEVELOPMENT_ASSET_PATHS = "\"Aisle Five/Preview Content\"";
 				DEVELOPMENT_TEAM = WQ2P89MQU3;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = Doops/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = "Aisle 5";
+				INFOPLIST_FILE = "Aisle Five/Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = "Aisle Five";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.shopping";
 				INFOPLIST_KEY_NSCameraUsageDescription = "Let me use please.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
@@ -480,12 +454,12 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_ASSET_PATHS = "\"Doops/Preview Content\"";
+				DEVELOPMENT_ASSET_PATHS = "\"Aisle Five/Preview Content\"";
 				DEVELOPMENT_TEAM = WQ2P89MQU3;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = Doops/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = "Aisle 5";
+				INFOPLIST_FILE = "Aisle Five/Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = "Aisle Five";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.shopping";
 				INFOPLIST_KEY_NSCameraUsageDescription = "Let me use please.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;

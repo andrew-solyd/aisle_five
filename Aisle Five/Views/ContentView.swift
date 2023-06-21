@@ -21,7 +21,7 @@ extension Color {
 struct ContentView: View {    
         
     let conversationHistory = ConversationHistory()
-    let _userMessage = userMessage()
+    let copilotManager = CopilotManager()
     let timer = Timer.publish(every: 0.5, on: .main, in: .common).autoconnect()
     
     @State var isLoading = true
@@ -52,8 +52,7 @@ struct ContentView: View {
                                      waitingMessageIndex: $waitingMessageIndex,
                                      isTextEditorVisible: $isTextEditorVisible,
                                      userInput: $userInput,
-                                     isShowingShoppingList: $isShowingShoppingList,
-                                     _userMessage: _userMessage)
+                                     isShowingShoppingList: $isShowingShoppingList)
                     .environmentObject(ShoppingList.shared)
                 }
                 .onAppear {
@@ -65,7 +64,7 @@ struct ContentView: View {
                         dotCount = 0
                         waitingMessageIndex = conversation.endIndex
                         conversation.append(Message(text: "", isUserInput: false))
-                        _userMessage.initializeAgent { result in
+                        copilotManager.initialize { result in
                             DispatchQueue.main.async {
                                 if let index = self.waitingMessageIndex {
                                     conversation.remove(at: index)

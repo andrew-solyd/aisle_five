@@ -12,7 +12,7 @@ enum APIError: Error {
     case invalidResponse
 }
 
-struct listCopilot {
+struct SmartListAPI {
     
     static var isSortingInProgress = false
     
@@ -23,7 +23,7 @@ struct listCopilot {
     #endif
     
     // Function to send Shopping List to API as a POST call
-    static func sortNewItems() {
+    static func sortItems() {
         isSortingInProgress = true
         if let jsonData = shoppingListToJSON(ShoppingList.shared) {
            // Print the JSON data as a string
@@ -61,16 +61,16 @@ struct listCopilot {
     }
 }
 
-struct shopCopilot {
+struct CopilotAPI {
     
     #if DEBUG
-        static let baseURL = URL(string: "http://localhost:8080")!
+    static let baseURL = URL(string: "http://localhost:8080")!
     #else
-        static let baseURL = URL(string: "https://solyd-open-api.fly.dev")!
+    static let baseURL = URL(string: "https://solyd-open-api.fly.dev")!
     #endif
     
-    func initializeAgent(completion: @escaping (Result<String, Error>) -> Void) {
-        let url = userMessage.baseURL.appendingPathComponent("initialize")
+    func initialize(completion: @escaping (Result<CopilotInitialization, Error>) -> Void) {
+        let url = CopilotAPI.baseURL.appendingPathComponent("initialize")
         
         var request = URLRequest(url: url)
         request.httpMethod = "POST"
@@ -91,7 +91,8 @@ struct shopCopilot {
                 let jsonResponse = try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any]
                 if let systemInstructions = jsonResponse?["systemInstructions"] as? String,
                    let chatGPTresponse = jsonResponse?["chatGPTresponse"] as? String {
-                    completion(.success((systemInstructions, chatGPTresponse)))
+                    let initialization = CopilotInitialization(systemInstructions: systemInstructions, chatGPTresponse: chatGPTresponse)
+                    completion(.success(initialization))
                 } else {
                     completion(.failure(APIError.invalidResponse))
                 }
@@ -100,23 +101,15 @@ struct shopCopilot {
             }
         }.resume()
     }
-}
-
-struct userMessage {
     
-    #if DEBUG
-    static let baseURL = URL(string: "http://localhost:8080")!
-    #else
-    static let baseURL = URL(string: "https://solyd-open-api.fly.dev")!
-    #endif
-    
-    func sendRequest(with message: String, completion: @escaping (Result<String, Error>) -> Void) {
-        let url = userMessage.baseURL.appendingPathComponent("user-message")
+    func complete(with conversationHistory: [[String: String]], completion: @escaping (Result<String, Error>) -> Void) {
+        let url = CopilotAPI.baseURL.appendingPathComponent("user-message")
         var request = URLRequest(url: url)
         request.httpMethod = "POST"
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-        let parameters = ["message": message]
-        request.httpBody = try? JSONSerialization.data(withJSONObject: parameters, options: [])
+        
+        let requestBody = ["messages": conversationHistory]
+        request.httpBody = try? JSONSerialization.data(withJSONObject: requestBody, options: [])
         
         let task = URLSession.shared.dataTask(with: request) { (data, response, error) in
             if let error = error {
@@ -142,37 +135,5 @@ struct userMessage {
             }
         }
         task.resume()
-    }
-    
-    func initializeAgent(completion: @escaping (Result<String, Error>) -> Void) {
-        let url = userMessage.baseURL.appendingPathComponent("initialize")
-        
-        var request = URLRequest(url: url)
-        request.httpMethod = "POST"
-        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-        
-        URLSession.shared.dataTask(with: request) { data, response, error in
-            if let error = error {
-                completion(.failure(error))
-                return
-            }
-            
-            guard let data = data else {
-                completion(.failure(APIError.requestFailed))
-                return
-            }
-            
-            do {
-                let jsonResponse = try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any]
-                if let message = jsonResponse?["message"] as? [String: String],
-                   let initialMessage = message["content"] {
-                    completion(.success(initialMessage))
-                } else {
-                    completion(.failure(APIError.invalidResponse))
-                }
-            } catch {
-                completion(.failure(error))
-            }
-        }.resume()
     }
 }

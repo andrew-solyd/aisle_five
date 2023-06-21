@@ -14,7 +14,7 @@ struct UserInputView: View {
     @Binding var conversation: [Message]
     @Binding var waitingMessageIndex: Int?
     @Binding var isTextEditorVisible: Bool
-    let _userMessage: userMessage
+    let copilotManager = CopilotManager()
     
     @FocusState private var isFocused: Bool
     @Environment(\.presentationMode) var presentationMode
@@ -56,7 +56,7 @@ struct UserInputView: View {
             conversation.append(Message(text: userInput.replacingOccurrences(of: "\n", with: ""), isUserInput: true))
             waitingMessageIndex = conversation.endIndex
             conversation.append(Message(text: " ", isUserInput: false))
-            _userMessage.sendRequest(with: userInput.replacingOccurrences(of: "\n", with: "")) { result in
+            copilotManager.complete(with: userInput.replacingOccurrences(of: "\n", with: "")) { result in
                 switch result {
                 case .success(let response):
                     processResponse(response)

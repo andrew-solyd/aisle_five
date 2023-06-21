@@ -18,7 +18,6 @@ struct ConversationView: View {
     @Binding var isTextEditorVisible: Bool
     @Binding var userInput: String
     @Binding var isShowingShoppingList: Bool
-    let _userMessage: userMessage
     @State private var scrollOffset: CGFloat = 0
     @State private var lastKeyboardVisibilityChangeDate = Date(timeIntervalSince1970: 0)
     @State private var contentHeight: CGFloat = 0
@@ -38,8 +37,7 @@ struct ConversationView: View {
                                           dotCount: $dotCount,
                                           conversation: $conversation,
                                           waitingMessageIndex: $waitingMessageIndex,
-                                          isTextEditorVisible: $isTextEditorVisible,
-                                          _userMessage: _userMessage)
+                                          isTextEditorVisible: $isTextEditorVisible)
                             Spacer()
                         }
                         .background(
