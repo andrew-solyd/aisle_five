@@ -10,6 +10,7 @@ import SwiftUI
 struct ConversationView: View {
     
     @EnvironmentObject var shoppingList: ShoppingList
+    @EnvironmentObject var userSession: UserSession
 
     @Binding var conversation: [Message]
     @Binding var isWaitingForResponse: Bool
@@ -127,6 +128,46 @@ struct ConversationView: View {
             .padding(.bottom, 30)
             .padding(.trailing, 30)
             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottomTrailing)
+            ZStack {
+                // Disclaimer Text
+                if isTextEditorVisible && !userSession.isDisclaimerDismissed {
+                    VStack(alignment: .center, spacing: 4) { // set alignment to .leading for left alignment
+                        Text("By messaging Aisle Five, you are agreeing to our")
+                            .font(.caption)
+                            .foregroundColor(.secondary)
+                        HStack(spacing: 0) {
+                            Link("Terms of Service", destination: URL(string: "https://placeholder.com")!)
+                                .font(.caption)
+                                .bold()
+                                .foregroundColor(Color.systemFontColor)
+                            Text(" and ")
+                                .font(.caption)
+                                .foregroundColor(.secondary)
+                            Link("Privacy Policy", destination: URL(string: "https://placeholder.com")!)
+                                .font(.caption)
+                                .bold()
+                                .foregroundColor(Color.systemFontColor)
+                            Text(". ")
+                                .font(.caption)
+                                .foregroundColor(.primary)
+                            Button(action: {
+                                userSession.isDisclaimerDismissed = true
+                            }) {
+                                Text("Dismiss")
+                                    .font(.caption)
+                                    .bold()
+                                    .foregroundColor(Color.systemFontColor)
+                            }
+                            Text(".")
+                                .font(.caption)
+                                .foregroundColor(.primary)
+                        }
+                    }
+                    .padding(.leading, 20) // add a leading padding of 30px
+                    .padding(.bottom, 38)
+                    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottomLeading) // set alignment to .bottomLeading for bottom left alignment
+                }
+            }
         }
     }
 }

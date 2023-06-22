@@ -18,14 +18,17 @@ extension Color {
     static let userFontColor = Color(red: 22/255, green: 42/255, blue: 59/255, opacity: 0.65)
 }
 
-struct ContentView: View {    
+struct ContentView: View {
+    
+    @StateObject private var userSession = UserSession()
+    @StateObject private var shoppingList = ShoppingList.shared
         
     let conversationHistory = ConversationHistory()
     let copilotManager = CopilotManager()
     let timer = Timer.publish(every: 0.5, on: .main, in: .common).autoconnect()
     
-    @State var isLoading = true
-    @State var isInitiliazied = false
+    @State private var isLoading = true
+    @State private var isInitiliazied = false
     @State private var isTextEditorVisible = false
     @State private var textFieldText = ""
     @State private var userInput: String = ""
@@ -34,13 +37,13 @@ struct ContentView: View {
     @State private var dotCount: Int = 0
     @State private var waitingMessageIndex: Int? = nil
     @State private var isShowingShoppingList = false
-    @StateObject private var shoppingList = ShoppingList.shared
+    
     @FocusState private var isFocused: Bool
     
     var body: some View {
         NavigationView {
             if isLoading {
-                LoadingView()
+                LoadingView(isLoading: $isLoading)
             } else if isShowingShoppingList {
                 ShoppingListView(isShowingShoppingList: $isShowingShoppingList)
                     .environmentObject(ShoppingList.shared)
@@ -54,6 +57,7 @@ struct ContentView: View {
                                      userInput: $userInput,
                                      isShowingShoppingList: $isShowingShoppingList)
                     .environmentObject(ShoppingList.shared)
+                    .environmentObject(userSession)
                 }
                 .onAppear {
                     if !isInitiliazied {
@@ -100,12 +104,6 @@ struct ContentView: View {
                     }
                 }
                 .background(Color.bodyColor)
-            }
-        }
-        .onAppear {
-            // isLoading = false
-            DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
-                isLoading = false
             }
         }
         .background(Color.bodyColor.edgesIgnoringSafeArea(.all))
