@@ -11,8 +11,9 @@ struct ShoppingListView: View {
     @EnvironmentObject var shoppingList: ShoppingList
 
     @Binding var isShowingShoppingList: Bool
-    @State private var isInEditMode: Bool = false
+    @State private var isInEditMode = false
     @State private var isPixelVisible = false
+    @State private var showConfirmationAlert = false
     
     var body: some View {
         VStack {
@@ -120,48 +121,54 @@ struct ShoppingListView: View {
     }
     
     func removeAllProducts() {
-        for category in shoppingList.products.keys {
-            shoppingList.products[category]?.removeAll()
-            if shoppingList.products[category]?.isEmpty ?? false {
-                shoppingList.products.removeValue(forKey: category)
-            }
-        }
+        showConfirmationAlert = false
+        shoppingList.products.removeAll()
     }
     
+    @ViewBuilder
     var buttonBar: some View {
         if isInEditMode {
-            return AnyView(
-                Button("Done") {
-                    isInEditMode.toggle()
-                }
-                .padding(.vertical, 10)
-                .padding(.horizontal, 30)
-                .frame(maxWidth: .infinity)
-            )
+            Button("Done") {
+                isInEditMode.toggle()
+            }
+            .padding(.vertical, 10)
+            .padding(.horizontal, 30)
+            .frame(maxWidth: .infinity)
+        // if isInDropMode create confirmatoin or back dialogue in same space as isInEditMode above
+        // if confirmation execute removeAllProducts()
         } else {
-            return AnyView(
-                HStack {
-                    ButtonView(action: {
-                        isShowingShoppingList = false
-                    }, imageName: "back-icon")
-                    Spacer()
-                    ButtonView(action: {
-                        // Manually add item to ShoppingList model
-
-                    }, imageName: "add-icon")
-                    Spacer()
-                    ButtonView(action: {
-                        isInEditMode.toggle()
-                    }, imageName: "remove-icon")
-                    Spacer()
-                    ButtonView(action: {
-                        removeAllProducts()
-                    }, imageName: "delete-icon")
-                }
-                .padding(.vertical, 10)
-                .padding(.horizontal, 30)
-                .frame(maxWidth: .infinity)
-            )
+            HStack {
+                ButtonView(action: {
+                    isShowingShoppingList = false
+                }, imageName: "back-icon")
+                Spacer()
+                /*
+                ButtonView(action: {
+                    // Manually add item to ShoppingList model
+                }, imageName: "add-icon")
+                */
+                Spacer()
+                Spacer()
+                ButtonView(action: {
+                    isInEditMode.toggle()
+                }, imageName: "remove-icon")
+                Spacer()
+                ButtonView(action: {
+                    // Delete shopping list button
+                    showConfirmationAlert = true
+                }, imageName: "delete-icon")
+            }
+            .padding(.vertical, 10)
+            .padding(.horizontal, 30)
+            .frame(maxWidth: .infinity)
+            .alert(isPresented: $showConfirmationAlert) {
+                Alert(
+                    title: Text("Delete Shopping List"),
+                    message: Text("Are you sure you want to delete the shopping list? This action cannot be undone."),
+                    primaryButton: .cancel(),
+                    secondaryButton: .destructive(Text("Delete"), action: removeAllProducts)
+                )
+            }
         }
     }
 }

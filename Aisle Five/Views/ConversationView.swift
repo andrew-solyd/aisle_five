@@ -74,11 +74,11 @@ struct ConversationView: View {
                                         lastKeyboardVisibilityChangeDate = Date()
                                     }
                                 } else if delta > 10 && ( scrollOffset / geometry.frame(in: .named("scrollView")).height ) > 0.55 {
-                                        // User has reached the bottom of the ScrollView, show the keyboard
-                                        DispatchQueue.main.async {
-                                            isTextEditorVisible = true
-                                            lastKeyboardVisibilityChangeDate = Date()
-                                        }
+                                    // User has reached the bottom of the ScrollView, show the keyboard
+                                    DispatchQueue.main.async {
+                                        isTextEditorVisible = true
+                                        lastKeyboardVisibilityChangeDate = Date()
+                                    }
                                 } else if delta > 10  &&  contentHeight < ( geometry.frame(in: .named("scrollView")).height - 50 ) {
                                     // User has reached the bottom of the ScrollView, show the keyboard
                                     DispatchQueue.main.async {
@@ -111,9 +111,9 @@ struct ConversationView: View {
             LinearGradient(gradient: Gradient(colors: [Color.white.opacity(1.0), Color.white.opacity(0.0)]),
                            startPoint: .top,
                            endPoint: .bottom)
-                .frame(height: 100) // Adjust the height to control the fade-out length
-                .ignoresSafeArea(edges: .top)
-                .alignmentGuide(.top, computeValue: { _ in 0 })
+            .frame(height: 100) // Adjust the height to control the fade-out length
+            .ignoresSafeArea(edges: .top)
+            .alignmentGuide(.top, computeValue: { _ in 0 })
             // Shopping List Button
             Button(action: {
                 isShowingShoppingList = true
@@ -136,14 +136,14 @@ struct ConversationView: View {
                             .font(.caption)
                             .foregroundColor(.secondary)
                         HStack(spacing: 0) {
-                            Link("Terms of Service", destination: URL(string: "https://placeholder.com")!)
+                            Link("Terms of Service", destination: URL(string: "https://www.aislefive.us/legal")!)
                                 .font(.caption)
                                 .bold()
                                 .foregroundColor(Color.systemFontColor)
                             Text(" and ")
                                 .font(.caption)
                                 .foregroundColor(.secondary)
-                            Link("Privacy Policy", destination: URL(string: "https://placeholder.com")!)
+                            Link("Privacy Policy", destination: URL(string: "https://www.aislefive.us/legal")!)
                                 .font(.caption)
                                 .bold()
                                 .foregroundColor(Color.systemFontColor)
@@ -168,6 +168,10 @@ struct ConversationView: View {
                     .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottomLeading) // set alignment to .bottomLeading for bottom left alignment
                 }
             }
+        }
+        .onAppear() {
+            print("Conversation View")
+            print(isWaitingForResponse)
         }
     }
 }
