@@ -123,7 +123,6 @@ struct MessageView: View {
     }
 
     func toggleInShoppingList(_ text: String) {
-        print("Toggle", text)
         let itemName = text.replacingOccurrences(of: "+", with: " ")
         // Searching for the product in all categories
         for (category, products) in shoppingList.products {

@@ -11,17 +11,22 @@ struct ConversationView: View {
     
     @EnvironmentObject var shoppingList: ShoppingList
     @EnvironmentObject var userSession: UserSession
-
-    @Binding var conversation: [Message]
-    @Binding var isWaitingForResponse: Bool
-    @Binding var dotCount: Int
-    @Binding var waitingMessageIndex: Int?
-    @Binding var isTextEditorVisible: Bool
-    @Binding var userInput: String
+    
+    let copilotManager: CopilotManager
+        
+    @State private var isWaitingForResponse:Bool = false
+    @State private var dotCount: Int = 0
+    @State private var waitingMessageIndex: Int? = nil
+    @State private var isTextEditorVisible: Bool = false
+    @State private var userInput: String = ""
+    
     @Binding var isShowingShoppingList: Bool
+    
     @State private var scrollOffset: CGFloat = 0
     @State private var lastKeyboardVisibilityChangeDate = Date(timeIntervalSince1970: 0)
     @State private var contentHeight: CGFloat = 0
+    
+    let timer = Timer.publish(every: 0.5, on: .main, in: .common).autoconnect()
     
     var body: some View {
         ZStack(alignment: .top) {
@@ -29,14 +34,15 @@ struct ConversationView: View {
                 ScrollViewReader { scrollView in
                     ScrollView {
                         VStack(spacing: 8) {
-                            ForEach(conversation.indices, id: \.self) { index in
-                                MessageView(message: conversation[index])
+                            ForEach(userSession.conversation.indices, id: \.self) { index in
+                                MessageView(message: userSession.conversation[index])
                                     .environmentObject(ShoppingList.shared)
+                                    .id(index)
                             }
                             UserInputView(userInput: $userInput,
                                           isWaitingForResponse: $isWaitingForResponse,
                                           dotCount: $dotCount,
-                                          conversation: $conversation,
+                                          conversation: $userSession.conversation,
                                           waitingMessageIndex: $waitingMessageIndex,
                                           isTextEditorVisible: $isTextEditorVisible)
                             Spacer()
@@ -56,31 +62,40 @@ struct ConversationView: View {
                         )
                         .padding()
                         .frame(maxHeight: .infinity)
+                        .onAppear {
+                            if userSession.isInitialized && !isWaitingForResponse {
+                                print("HELLO")
+                                isTextEditorVisible = true
+                            }
+                        }
                         .onPreferenceChange(ViewOffsetKey.self) { offset in
                             let delta = offset - scrollOffset
                             scrollOffset = offset
                             
-                            // print("delta: \(delta)")
-                            // print("ratio: \(scrollOffset / geometry.frame(in: .named("scrollView")).height)")
-                            // print("contentHeight: \(contentHeight)")
+                            print("delta: \(delta)")
+                            print("ratio: \(scrollOffset / geometry.frame(in: .named("scrollView")).height)")
+                            print("contentHeight: \(contentHeight)")
                             
                             let keyboardVisibilityChangeDelay: TimeInterval = 0.75
                             
                             if Date().timeIntervalSince(lastKeyboardVisibilityChangeDate) > keyboardVisibilityChangeDelay && !isWaitingForResponse {
-                                if delta < -5 {
+                                if delta < -20 {
                                     // Swipe Down / Scroll Up to hide the keyboard
+                                    print("Swipe Down / Scroll Up to hide the keyboard")
                                     DispatchQueue.main.async {
                                         isTextEditorVisible = false
                                         lastKeyboardVisibilityChangeDate = Date()
                                     }
-                                } else if delta > 10 && ( scrollOffset / geometry.frame(in: .named("scrollView")).height ) > 0.55 {
+                                } else if delta > 10 && ( scrollOffset / geometry.frame(in: .named("scrollView")).height ) > 0.30 {
                                     // User has reached the bottom of the ScrollView, show the keyboard
+                                    print("User has reached the bottom of the ScrollView, show the keyboard")
                                     DispatchQueue.main.async {
                                         isTextEditorVisible = true
                                         lastKeyboardVisibilityChangeDate = Date()
                                     }
                                 } else if delta > 10  &&  contentHeight < ( geometry.frame(in: .named("scrollView")).height - 50 ) {
                                     // User has reached the bottom of the ScrollView, show the keyboard
+                                    print("User has reached the bottom of the ScrollView, show the keyboard")
                                     DispatchQueue.main.async {
                                         isTextEditorVisible = true
                                         lastKeyboardVisibilityChangeDate = Date()
@@ -131,47 +146,47 @@ struct ConversationView: View {
             ZStack {
                 // Disclaimer Text
                 if isTextEditorVisible && !userSession.isDisclaimerDismissed {
-                    VStack(alignment: .center, spacing: 4) { // set alignment to .leading for left alignment
-                        Text("By messaging Aisle Five, you are agreeing to our")
-                            .font(.caption)
-                            .foregroundColor(.secondary)
-                        HStack(spacing: 0) {
-                            Link("Terms of Service", destination: URL(string: "https://www.aislefive.us/legal")!)
-                                .font(.caption)
-                                .bold()
-                                .foregroundColor(Color.systemFontColor)
-                            Text(" and ")
-                                .font(.caption)
-                                .foregroundColor(.secondary)
-                            Link("Privacy Policy", destination: URL(string: "https://www.aislefive.us/legal")!)
-                                .font(.caption)
-                                .bold()
-                                .foregroundColor(Color.systemFontColor)
-                            Text(". ")
-                                .font(.caption)
-                                .foregroundColor(.primary)
-                            Button(action: {
-                                userSession.isDisclaimerDismissed = true
-                            }) {
-                                Text("Dismiss")
-                                    .font(.caption)
-                                    .bold()
-                                    .foregroundColor(Color.systemFontColor)
-                            }
-                            Text(".")
-                                .font(.caption)
-                                .foregroundColor(.primary)
-                        }
-                    }
-                    .padding(.leading, 20) // add a leading padding of 30px
-                    .padding(.bottom, 38)
-                    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottomLeading) // set alignment to .bottomLeading for bottom left alignment
+                    DisclaimerView()
+                        .environmentObject(userSession)
                 }
             }
         }
         .onAppear() {
-            print("Conversation View")
-            print(isWaitingForResponse)
+            if !userSession.isInitialized {
+                isWaitingForResponse = true
+                dotCount = 0
+                waitingMessageIndex = userSession.conversation.endIndex
+                userSession.conversation.append(Message(text: "", isUserInput: false))
+                copilotManager.initialize { result in
+                    DispatchQueue.main.async {
+                        if let index = self.waitingMessageIndex {
+                            userSession.conversation.remove(at: index)
+                            self.waitingMessageIndex = nil
+                        }
+                        switch result {
+                        case .success(let message):
+                            DispatchQueue.main.async {
+                                userSession.conversation.append(Message(text: message, isUserInput: false))
+                            }
+                            userSession.isInitialized = true
+                        case .failure(let error):
+                            print("Error initializing agent: \(error.localizedDescription)")
+                        }
+                    }
+                    isWaitingForResponse = false
+                    isTextEditorVisible = true
+                }
+            }
+        }
+        .onReceive(timer) { _ in
+            if isWaitingForResponse {
+                // Check if the index is within the bounds of the array
+                if let index = self.waitingMessageIndex, index < userSession.conversation.count {
+                    let dots = String(repeating: ".", count: dotCount)
+                    userSession.conversation[index] = Message(text: " \(dots)", isUserInput: false)
+                    dotCount = (dotCount + 1) % 4
+                }
+            }
         }
     }
 }

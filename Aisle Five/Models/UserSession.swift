@@ -9,4 +9,6 @@ import Foundation
 
 class UserSession: ObservableObject {
     @Published var isDisclaimerDismissed: Bool = false
+    @Published var isInitialized: Bool = false
+    @Published var conversation: [Message] = []
 }
