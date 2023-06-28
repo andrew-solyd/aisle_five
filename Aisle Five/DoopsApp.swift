@@ -19,8 +19,8 @@ struct DoopsApp: App {
                 .environmentObject(shoppingList)
                 .onOpenURL { url in
                     if url.scheme == "product", let product = url.host {
-                        // Add product to the shopping list with the category determined by your GPT-4 API
-                        // As a placeholder, let's use the "Pantry" category
+                        // Add product to the shopping list with the category determined by your GPT API
+                        // As a placeholder, let's use the "To Sort" category
                         shoppingList.products["To Sort"]?.append(Product(name: product, category: "To Sort"))
                     }
                 }
