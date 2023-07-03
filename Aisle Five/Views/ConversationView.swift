@@ -191,17 +191,11 @@ struct ConversationView: View {
         // Inverse mask and gradient at the bottom when TextEditor is not visible
         if !isTextEditorVisible {
             GeometryReader { _ in
-                /*
-                LinearGradient(gradient: Gradient(colors: [Color.bodyColor.opacity(0.0), Color.bodyColor]),
-                           startPoint: .top,
-                           endPoint: .bottom)
-                .frame(height: 10)
-                 */
                 Color.bodyColor
-                    .frame(height: 5)
+                    .frame(height: 10)
                     .ignoresSafeArea(edges: .bottom)
             }
-            .edgesIgnoringSafeArea(.bottom)
+            .frame(maxHeight: 10)
         }
     }
 }
