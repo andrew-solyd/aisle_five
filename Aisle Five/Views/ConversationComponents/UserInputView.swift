@@ -27,7 +27,7 @@ struct UserInputView: View {
                     .font(Font.custom("Parclo Serif Regular", size: 18))
                     .lineSpacing(_:6)
                     .foregroundColor(.systemFontColor)
-                    .frame(height: 90)
+                    .frame(height: 72)
                     .focused($isFocused)
                     .submitLabel(.send)
                     .onChange(of: userInput, perform: { value in
@@ -37,7 +37,9 @@ struct UserInputView: View {
                     })
                     .padding(.leading, 18)
             }
+            Spacer()
         }
+        .padding(.bottom, 20)
         .onChange(of: isTextEditorVisible) { newValue in
             if newValue {
                 isFocused = true

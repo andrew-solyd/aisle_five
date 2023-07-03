@@ -30,11 +30,34 @@ struct ShoppingListView: View {
         .background(Color.bodyColor)
     }
     
+    func customTextView(_ content: String, fontName: String, fontSize: CGFloat) -> some View {
+        Text(content)
+            .font(Font.custom(fontName, size: fontSize))
+            .lineSpacing(5)
+            .kerning(0.5)
+            .padding(.horizontal, 30)
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .foregroundColor(Color.systemFontColor)
+    }
+    
     var shoppingListContent: some View {
         ScrollView {
-            VStack(alignment: .leading, spacing: 8) {
-                ForEach(shoppingList.products.keys.sorted(), id: \.self) { category in
-                    productCategorySection(category)
+            if shoppingList.products.isEmpty {
+            // Empty state view
+                VStack(spacing: 20) {
+                    Spacer()
+                    customTextView("Shopping list empty", fontName: "Parclo Serif Black", fontSize: 22)
+                    customTextView("Tap highlighted items in your co-pilot chat to see them show up here.", fontName: "Parclo Serif Regular", fontSize: 18)
+                    customTextView("Sample prompts:", fontName: "Parclo Serif Medium", fontSize: 18)
+                    customTextView("1. Let's make japanese style fish sticks\n2. Need food for a week for under $50\n3.I'm doing whole30, I'd like 3 meal ideas", fontName: "Parclo Serif Regular", fontSize: 18)
+                    customTextView("Hint: For extra fun, tell your co-pilot to take on a celebrity personality.", fontName: "Parclo Serif Regular", fontSize: 18)
+                    Spacer()
+                }
+            } else {
+                VStack(alignment: .leading, spacing: 8) {
+                    ForEach(shoppingList.products.keys.sorted(), id: \.self) { category in
+                        productCategorySection(category)
+                    }
                 }
             }
         }
@@ -58,9 +81,17 @@ struct ShoppingListView: View {
                     .foregroundColor(Color.systemFontColor)
                     .padding(.vertical, 10)
                     .padding(.leading, 20)) {
-            ForEach(shoppingList.products[category] ?? [], id: \.id) { product in
+            
+            let sortedProducts = (shoppingList.products[category] ?? []).sorted {
+                let productName1 = extractProductName(from: $0.name)
+                let productName2 = extractProductName(from: $1.name)
+                return productName1 < productName2
+            }
+            
+            ForEach(sortedProducts, id: \.id) { product in
                 productButton(product)
             }
+                        
             .padding(.horizontal, 15)
         }
     }
@@ -96,6 +127,20 @@ struct ShoppingListView: View {
                 .overlay(RoundedRectangle(cornerRadius: 10)
                 .stroke(Color(red: 217/255, green: 225/255, blue: 233/255), lineWidth: 0.5))
         )
+    }
+    
+    func extractProductName(from productString: String) -> String {
+        let scanner = Scanner(string: productString)
+        var scannedNumber: Int = 0
+
+        if scanner.scanInt(&scannedNumber) {
+            // Check if there is a number at the start of the string
+            let indexFirstCapitalLetter = productString.firstIndex(where: { $0.isUppercase }) ?? productString.startIndex
+            return String(productString[indexFirstCapitalLetter...])
+        } else {
+            // If there is no number at the start of the string, the whole string is the product name
+            return productString
+        }
     }
     
     func removeProductButton(_ product: Product) -> some View {

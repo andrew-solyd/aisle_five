@@ -64,38 +64,35 @@ struct ConversationView: View {
                         .frame(maxHeight: .infinity)
                         .onAppear {
                             if userSession.isInitialized && !isWaitingForResponse {
-                                print("HELLO")
                                 isTextEditorVisible = true
                             }
                         }
                         .onPreferenceChange(ViewOffsetKey.self) { offset in
                             let delta = offset - scrollOffset
                             scrollOffset = offset
-                            
+                            /*
                             print("delta: \(delta)")
                             print("ratio: \(scrollOffset / geometry.frame(in: .named("scrollView")).height)")
                             print("contentHeight: \(contentHeight)")
+                            */
                             
                             let keyboardVisibilityChangeDelay: TimeInterval = 0.75
                             
                             if Date().timeIntervalSince(lastKeyboardVisibilityChangeDate) > keyboardVisibilityChangeDelay && !isWaitingForResponse {
                                 if delta < -20 {
                                     // Swipe Down / Scroll Up to hide the keyboard
-                                    print("Swipe Down / Scroll Up to hide the keyboard")
                                     DispatchQueue.main.async {
                                         isTextEditorVisible = false
                                         lastKeyboardVisibilityChangeDate = Date()
                                     }
                                 } else if delta > 10 && ( scrollOffset / geometry.frame(in: .named("scrollView")).height ) > 0.30 {
                                     // User has reached the bottom of the ScrollView, show the keyboard
-                                    print("User has reached the bottom of the ScrollView, show the keyboard")
                                     DispatchQueue.main.async {
                                         isTextEditorVisible = true
                                         lastKeyboardVisibilityChangeDate = Date()
                                     }
                                 } else if delta > 10  &&  contentHeight < ( geometry.frame(in: .named("scrollView")).height - 50 ) {
                                     // User has reached the bottom of the ScrollView, show the keyboard
-                                    print("User has reached the bottom of the ScrollView, show the keyboard")
                                     DispatchQueue.main.async {
                                         isTextEditorVisible = true
                                         lastKeyboardVisibilityChangeDate = Date()
@@ -104,7 +101,7 @@ struct ConversationView: View {
                             }
                         }
                     }
-                    .padding(.bottom, isTextEditorVisible ? 100 : 0)
+                    .padding(.bottom, isTextEditorVisible ? 65 : 0)
                     .keyboardAdaptive()
                     .coordinateSpace(name: "scrollView")
                     .onChange(of: isWaitingForResponse) { newValue in
@@ -117,19 +114,22 @@ struct ConversationView: View {
                     }
                 }
             }
-            // System icons mask bar
-            Color.bodyColor
-                .frame(height: 50)
-                .ignoresSafeArea(edges: .top)
-                .alignmentGuide(.top, computeValue: { _ in 0 })
-            // This needs to hit 0 opacity by the time we scroll into the mask bar
-            LinearGradient(gradient: Gradient(colors: [Color.white.opacity(1.0), Color.white.opacity(0.0)]),
-                           startPoint: .top,
-                           endPoint: .bottom)
-            .frame(height: 100) // Adjust the height to control the fade-out length
-            .ignoresSafeArea(edges: .top)
+                        
+            // Mask at gradient at the top
+            GeometryReader { geometry in
+                Color.bodyColor
+                    .frame(height: 45)
+                    .ignoresSafeArea(edges: .top)
+
+                LinearGradient(gradient: Gradient(colors: [Color.bodyColor, Color.bodyColor.opacity(0.0)]),
+                               startPoint: .top,
+                               endPoint: .bottom)
+                    .frame(height: 35)
+                    .position(x: geometry.size.width / 2, y: 0)
+            }
+            .frame(maxHeight: 80)
             .alignmentGuide(.top, computeValue: { _ in 0 })
-            // Shopping List Button
+          
             Button(action: {
                 isShowingShoppingList = true
             }) {
@@ -140,9 +140,9 @@ struct ConversationView: View {
                     .background(Color.clear) // Clear background
                     .opacity(0.5)
             }
-            .padding(.bottom, 30)
-            .padding(.trailing, 30)
-            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottomTrailing)
+                .padding(.bottom, 10)
+                .padding(.trailing, 10)
+                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottomTrailing)
             ZStack {
                 // Disclaimer Text
                 if isTextEditorVisible && !userSession.isDisclaimerDismissed {
@@ -187,6 +187,21 @@ struct ConversationView: View {
                     dotCount = (dotCount + 1) % 4
                 }
             }
+        }
+        // Inverse mask and gradient at the bottom when TextEditor is not visible
+        if !isTextEditorVisible {
+            GeometryReader { _ in
+                /*
+                LinearGradient(gradient: Gradient(colors: [Color.bodyColor.opacity(0.0), Color.bodyColor]),
+                           startPoint: .top,
+                           endPoint: .bottom)
+                .frame(height: 10)
+                 */
+                Color.bodyColor
+                    .frame(height: 5)
+                    .ignoresSafeArea(edges: .bottom)
+            }
+            .edgesIgnoringSafeArea(.bottom)
         }
     }
 }

@@ -13,7 +13,6 @@ struct KeyboardAdaptive: ViewModifier {
 
     func body(content: Content) -> some View {
         content
-            .padding(.bottom, 50)
          //   .background(
          //       LinearGradient(gradient: Gradient(colors: [Color.white.opacity(1.0), Color.white.opacity(0.0)]),
          //                      startPoint: .top,
