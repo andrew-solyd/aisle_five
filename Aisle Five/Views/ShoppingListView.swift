@@ -20,6 +20,23 @@ struct ShoppingListView: View {
             ZStack {
                 shoppingListContent
             }
+            .overlay(
+               VStack(spacing: 0) {
+                   // Red bar at the top
+                   Rectangle()
+                       .frame(height: 40)
+                       .foregroundColor(.bodyColor)
+                   LinearGradient(gradient: Gradient(colors: [.bodyColor, .clear]), startPoint: .top, endPoint: .bottom)
+                       .frame(height: 35)
+
+                   Spacer()
+
+                   // Blue bar at the bottom
+                   LinearGradient(gradient: Gradient(colors: [.clear, .bodyColor]), startPoint: .top, endPoint: .bottom)
+                       .frame(height: 35)
+               }
+            )
+            .edgesIgnoringSafeArea(.all) // Allow the overlays to extend into the safe area
             buttonBar
             Rectangle()
                 .foregroundColor(.clear)
@@ -46,15 +63,21 @@ struct ShoppingListView: View {
             // Empty state view
                 VStack(spacing: 20) {
                     Spacer()
-                    customTextView("Shopping list empty", fontName: "Parclo Serif Black", fontSize: 22)
+                    customTextView("", fontName: "Parclo Serif Black", fontSize: 22)
+                    Spacer()
+                    customTextView("Shopping list is empty", fontName: "Parclo Serif Black", fontSize: 22)
                     customTextView("Tap highlighted items in your co-pilot chat to see them show up here.", fontName: "Parclo Serif Regular", fontSize: 18)
                     customTextView("Sample prompts:", fontName: "Parclo Serif Medium", fontSize: 18)
                     customTextView("1. Let's make japanese style fish sticks\n2. Need food for a week for under $50\n3.I'm doing whole30, I'd like 3 meal ideas", fontName: "Parclo Serif Regular", fontSize: 18)
                     customTextView("Hint: For extra fun, tell your co-pilot to take on a celebrity personality.", fontName: "Parclo Serif Regular", fontSize: 18)
                     Spacer()
                 }
+                
             } else {
                 VStack(alignment: .leading, spacing: 8) {
+                    Spacer()
+                    customTextView("", fontName: "Parclo Serif Black", fontSize: 48)
+                    Spacer()
                     ForEach(shoppingList.products.keys.sorted(), id: \.self) { category in
                         productCategorySection(category)
                     }
@@ -176,7 +199,7 @@ struct ShoppingListView: View {
             Button("Done") {
                 isInEditMode.toggle()
             }
-            .padding(.vertical, 10)
+            .padding(.vertical, 5)
             .padding(.horizontal, 30)
             .frame(maxWidth: .infinity)
         // if isInDropMode create confirmatoin or back dialogue in same space as isInEditMode above
@@ -203,7 +226,7 @@ struct ShoppingListView: View {
                     showConfirmationAlert = true
                 }, imageName: "delete-icon")
             }
-            .padding(.vertical, 10)
+            .padding(.vertical, 5)
             .padding(.horizontal, 30)
             .frame(maxWidth: .infinity)
             .alert(isPresented: $showConfirmationAlert) {

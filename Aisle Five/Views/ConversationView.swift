@@ -141,7 +141,7 @@ struct ConversationView: View {
                     .opacity(0.5)
             }
                 .padding(.bottom, 10)
-                .padding(.trailing, 10)
+                .padding(.trailing, 20)
                 .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottomTrailing)
             ZStack {
                 // Disclaimer Text
@@ -153,6 +153,16 @@ struct ConversationView: View {
         }
         .onAppear() {
             if !userSession.isInitialized {
+                /*
+                #if DEBUG
+                let devInitMessage = """
+                    Welcome to Doops, your personal shopping assistant. This app is currently in development mode. With Doops, you can create and manage your shopping lists, and it will help you keep track of your shopping items. You can add items to your list, mark items as bought, and view your shopping history. It is designed to help make your shopping experience easier and more organized. The app is intuitive and user-friendly, making it easy for anyone to use. It has a clean and minimalist design, so you can focus on your shopping list without any distractions. The app is currently in beta testing, and we are actively working on improving it based on user feedback. Please note that since this is a beta version, you may experience some bugs and issues. We appreciate your patience and understanding. We encourage you to provide feedback and report any issues you encounter. Your feedback is valuable to us and will help us improve the app. Thank you for using Doops. Happy shopping! It is designed to help make your shopping experience easier and more organized. The app is intuitive and user-friendly, making it easy for anyone to use. It has a clean and minimalist design, so you can focus on your shopping list without any distractions. The app is currently in beta testing, and we are actively working on improving it based on user feedback. Please note that since this is a beta version, you may experience some bugs and issues. We appreciate your patience and understanding. We encourage you to provide feedback and report any issues you encounter. Your feedback is valuable to us and will help us improve the app. Thank you for using Doops. Happy shopping!
+                    """
+                DispatchQueue.main.async {
+                    userSession.conversation.append(Message(text: devInitMessage, isUserInput: false))
+                }
+                #else
+                */
                 isWaitingForResponse = true
                 dotCount = 0
                 waitingMessageIndex = userSession.conversation.endIndex
@@ -176,6 +186,7 @@ struct ConversationView: View {
                     isWaitingForResponse = false
                     isTextEditorVisible = true
                 }
+                // #endif
             }
         }
         .onReceive(timer) { _ in
@@ -193,8 +204,9 @@ struct ConversationView: View {
             GeometryReader { _ in
                 Color.bodyColor
                     .frame(height: 10)
-                    .ignoresSafeArea(edges: .bottom)
+                    .background(Color.bodyColor)
             }
+            .ignoresSafeArea(edges: .bottom)
             .frame(maxHeight: 10)
         }
     }

@@ -23,13 +23,10 @@ struct ContentView: View {
     @StateObject private var userSession = UserSession()
     @StateObject private var shoppingList = ShoppingList.shared
         
-    let conversationHistory = ConversationHistory()
     let copilotManager = CopilotManager()
     
     @State private var isLoading = true    
     @State private var isShowingShoppingList = false
-    
-    @FocusState private var isFocused: Bool
     
     var body: some View {
         NavigationView {

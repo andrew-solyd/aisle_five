@@ -11,6 +11,15 @@ import SwiftUI
 struct DoopsApp: App {
     @StateObject private var shoppingList = ShoppingList()
     let persistenceController = PersistenceController.shared
+    
+    init() {
+        for family: String in UIFont.familyNames {
+            print("\(family)")
+            for names: String in UIFont.fontNames(forFamilyName: family) {
+                print("== \(names)")
+            }
+        }
+    }
 
     var body: some Scene {
         WindowGroup {
