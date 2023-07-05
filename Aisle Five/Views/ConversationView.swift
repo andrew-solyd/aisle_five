@@ -6,8 +6,11 @@
 //
 
 import SwiftUI
+import UIKit
 
 struct ConversationView: View {
+    
+    let feedbackGenerator = UISelectionFeedbackGenerator()
     
     @EnvironmentObject var shoppingList: ShoppingList
     @EnvironmentObject var userSession: UserSession
@@ -70,32 +73,38 @@ struct ConversationView: View {
                         .onPreferenceChange(ViewOffsetKey.self) { offset in
                             let delta = offset - scrollOffset
                             scrollOffset = offset
-                            /*
+                            
                             print("delta: \(delta)")
                             print("ratio: \(scrollOffset / geometry.frame(in: .named("scrollView")).height)")
                             print("contentHeight: \(contentHeight)")
-                            */
+                            
                             
                             let keyboardVisibilityChangeDelay: TimeInterval = 0.75
                             
                             if Date().timeIntervalSince(lastKeyboardVisibilityChangeDate) > keyboardVisibilityChangeDelay && !isWaitingForResponse {
-                                if delta < -10 {
+                                if delta < -10 && delta != -16 {
                                     // Swipe Down / Scroll Up to hide the keyboard
                                     DispatchQueue.main.async {
                                         isTextEditorVisible = false
                                         lastKeyboardVisibilityChangeDate = Date()
+                                        // Provide haptic feedback for hiding the keyboard
+                                        feedbackGenerator.selectionChanged()
                                     }
                                 } else if delta > 10 && ( scrollOffset / geometry.frame(in: .named("scrollView")).height ) > 0.30 {
                                     // User has reached the bottom of the ScrollView, show the keyboard
                                     DispatchQueue.main.async {
                                         isTextEditorVisible = true
                                         lastKeyboardVisibilityChangeDate = Date()
+                                        // Provide haptic feedback for showing the keyboard
+                                        feedbackGenerator.selectionChanged()
                                     }
                                 } else if delta > 10  &&  contentHeight < ( geometry.frame(in: .named("scrollView")).height - 50 ) {
                                     // User has reached the bottom of the ScrollView, show the keyboard
                                     DispatchQueue.main.async {
                                         isTextEditorVisible = true
                                         lastKeyboardVisibilityChangeDate = Date()
+                                        // Provide haptic feedback for showing the keyboard
+                                        feedbackGenerator.selectionChanged()
                                     }
                                 }
                             }
@@ -154,6 +163,7 @@ struct ConversationView: View {
         .onAppear() {
             if !userSession.isInitialized {
                 
+                /*
                 #if DEBUG
                 let devInitMessage = """
                     Welcome to Doops, your personal shopping assistant. This app is currently in development mode. With Doops, you can create and manage your shopping lists, and it will help you keep track of your shopping items. You can add items to your list, mark items as bought, and view your shopping history. It is designed to help make your shopping experience easier and more organized. The app is intuitive and user-friendly, making it easy for anyone to use. It has a clean and minimalist design, so you can focus on your shopping list without any distractions. The app is currently in beta testing, and we are actively working on improving it based on user feedback. Please note that since this is a beta version, you may experience some bugs and issues. We appreciate your patience and understanding. We encourage you to provide feedback and report any issues you encounter. Your feedback is valuable to us and will help us improve the app. Thank you for using Doops. Happy shopping! It is designed to help make your shopping experience easier and more organized. The app is intuitive and user-friendly, making it easy for anyone to use. It has a clean and minimalist design, so you can focus on your shopping list without any distractions. The app is currently in beta testing, and we are actively working on improving it based on user feedback. Please note that since this is a beta version, you may experience some bugs and issues. We appreciate your patience and understanding. We encourage you to provide feedback and report any issues you encounter. Your feedback is valuable to us and will help us improve the app. Thank you for using Doops. Happy shopping!
@@ -162,6 +172,7 @@ struct ConversationView: View {
                     userSession.conversation.append(Message(text: devInitMessage, isUserInput: false))
                 }
                 #else
+                */
                 
                 isWaitingForResponse = true
                 dotCount = 0
@@ -186,7 +197,7 @@ struct ConversationView: View {
                     isWaitingForResponse = false
                     isTextEditorVisible = true
                 }
-                #endif
+                // #endif
             }
         }
         .onReceive(timer) { _ in
@@ -199,7 +210,7 @@ struct ConversationView: View {
                 }
             }
         }
-        // Inverse mask and gradient at the bottom when TextEditor is not visible
+        // Inverse mask at the bottom when TextEditor is not visible
         if !isTextEditorVisible {
             GeometryReader { _ in
                 Color.bodyColor
