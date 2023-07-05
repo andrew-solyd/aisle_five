@@ -65,11 +65,11 @@ struct ShoppingListView: View {
                     Spacer()
                     customTextView("", fontName: "Parclo Serif Black", fontSize: 22)
                     Spacer()
-                    customTextView("Shopping list is empty", fontName: "Parclo Serif Black", fontSize: 22)
-                    customTextView("Tap highlighted items in your co-pilot chat to see them show up here.", fontName: "Parclo Serif Regular", fontSize: 18)
-                    customTextView("Sample prompts:", fontName: "Parclo Serif Medium", fontSize: 18)
-                    customTextView("1. Let's make japanese style fish sticks\n2. Need food for a week for under $50\n3.I'm doing whole30, I'd like 3 meal ideas", fontName: "Parclo Serif Regular", fontSize: 18)
-                    customTextView("Hint: For extra fun, tell your co-pilot to take on a celebrity personality.", fontName: "Parclo Serif Regular", fontSize: 18)
+                    customTextView("Your Shopping List is Empty", fontName: "Parclo Serif Black", fontSize: 22)
+                    customTextView("Tap on highlighted items in your Co-Pilot chat to add them here.", fontName: "Parclo Serif Regular", fontSize: 18)
+                    customTextView("Try these sample prompts for inspiration:", fontName: "Parclo Serif Medium", fontSize: 18)
+                    customTextView("1. Let's make Japanese-style fish sticks\n2. Plan a week's worth of meals under $50\n3. I'm doing Whole30, can you suggest 3 meal ideas?", fontName: "Parclo Serif Regular", fontSize: 14)
+                    customTextView("Fun tip: To give your Co-Pilot a celebrity personality, just ask!", fontName: "Parclo Serif Regular", fontSize: 14)
                     Spacer()
                 }
                 
@@ -81,6 +81,7 @@ struct ShoppingListView: View {
                     ForEach(shoppingList.products.keys.sorted(), id: \.self) { category in
                         productCategorySection(category)
                     }
+                    Spacer()
                 }
             }
         }
@@ -226,7 +227,7 @@ struct ShoppingListView: View {
                     showConfirmationAlert = true
                 }, imageName: "delete-icon")
             }
-            .padding(.vertical, 5)
+            .padding(.vertical, 15)
             .padding(.horizontal, 30)
             .frame(maxWidth: .infinity)
             .alert(isPresented: $showConfirmationAlert) {

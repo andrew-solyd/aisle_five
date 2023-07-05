@@ -44,7 +44,7 @@ struct DisclaimerView: View {
             }
         }
         .padding(.leading, 20) // add a leading padding of 30px
-        .padding(.bottom, 18)
+        .padding(.bottom, 13)
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottomLeading) // set alignment to .bottomLeading for bottom left alignment
     }
 }
