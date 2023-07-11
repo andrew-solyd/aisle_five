@@ -13,7 +13,14 @@ class Product: Identifiable, ObservableObject, Codable {
     let id = UUID()
     var name: String
     var category: String
-    @Published var isChecked: Bool = false
+    
+    @Published var isChecked: Bool = false {
+       didSet {
+           self.notifyListChanged()
+       }
+    }
+    
+    weak var shoppingList: ShoppingList?
     
     enum CodingKeys: String, CodingKey {
         case name
@@ -38,5 +45,9 @@ class Product: Identifiable, ObservableObject, Codable {
         try container.encode(name, forKey: .name)
         try container.encode(category, forKey: .category)
         try container.encode(isChecked, forKey: .isChecked)
+    }
+    
+    func notifyListChanged() {
+        shoppingList?.saveToFile()
     }
 }

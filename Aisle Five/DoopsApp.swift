@@ -13,12 +13,7 @@ struct DoopsApp: App {
     let persistenceController = PersistenceController.shared
     
     init() {
-        for family: String in UIFont.familyNames {
-            print("\(family)")
-            for names: String in UIFont.fontNames(forFamilyName: family) {
-                print("== \(names)")
-            }
-        }
+        print("I'm alive!")
     }
 
     var body: some Scene {

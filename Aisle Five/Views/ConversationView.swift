@@ -74,10 +74,11 @@ struct ConversationView: View {
                             let delta = offset - scrollOffset
                             scrollOffset = offset
                             
+                            /*
                             print("delta: \(delta)")
                             print("ratio: \(scrollOffset / geometry.frame(in: .named("scrollView")).height)")
                             print("contentHeight: \(contentHeight)")
-                            
+                            */
                             
                             let keyboardVisibilityChangeDelay: TimeInterval = 0.75
                             

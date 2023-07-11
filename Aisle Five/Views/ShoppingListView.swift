@@ -122,7 +122,7 @@ struct ShoppingListView: View {
     
     func productButton(_ product: Product) -> some View {
         Button(action: {
-            product.isChecked.toggle()
+            shoppingList.toggleProductCheckStatus(product: product)
             isPixelVisible.toggle()
         }) {
             HStack {

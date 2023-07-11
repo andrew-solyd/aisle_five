@@ -174,8 +174,8 @@
 		3FD7129A2A4291FC0086EE1E /* Shopping List */ = {
 			isa = PBXGroup;
 			children = (
-				3F9EC0FC2A41F2BD000358A1 /* Product.swift */,
 				3F09B4F52A1FE7EE0009ED1D /* ShoppingList.swift */,
+				3F9EC0FC2A41F2BD000358A1 /* Product.swift */,
 				3F9EC0FE2A41F2D2000358A1 /* SortedItems.swift */,
 				3F9EC1002A41F2E6000358A1 /* UpdateQueue.swift */,
 			);
