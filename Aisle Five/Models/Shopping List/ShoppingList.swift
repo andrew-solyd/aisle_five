@@ -69,7 +69,7 @@ class ShoppingList: ObservableObject {
     func toggleProductCheckStatus(product: Product) {
         for (category, products) in self.products {
             if let index = products.firstIndex(where: {$0.id == product.id}) {
-                var newProduct = products[index] // make a copy of the product
+                let newProduct = products[index] // make a copy of the product
                 newProduct.isChecked = !newProduct.isChecked // toggle its isChecked status explicitly
                 self.products[category]?[index] = newProduct // replace the original product with the new one
                 break // Once you find the product, no need to continue the loop

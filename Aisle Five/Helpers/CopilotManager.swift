@@ -31,11 +31,19 @@ struct CopilotManager {
     }
     
     func complete(with message: String, completion: @escaping (Result<String, Error>) -> Void) {
+        // Create system message that presents the shopping list to the OpenAI API
+        let systemMessage = ["role": "system", "content": shoppingListToString(ShoppingList.shared)]
+        var apiConversationHistory = conversationHistory.messages // Copy of the conversation history for API call
+        apiConversationHistory.append(systemMessage) // Append system message to API conversation history
+        
+        // update system conversation history with user message
         let userMessage = ["role": "user", "content": message]
         var updatedConversationHistory = conversationHistory.messages
         updatedConversationHistory.append(userMessage)
+        
+        apiConversationHistory.append(userMessage) // Append user message to API conversation history completing the inject
 
-        copilotAPI.complete(with: updatedConversationHistory) { result in
+        copilotAPI.complete(with: apiConversationHistory) { result in
             switch result {
             case .success(let assistantResponse):
                 let assistantMessage = ["role": "assistant", "content": assistantResponse]

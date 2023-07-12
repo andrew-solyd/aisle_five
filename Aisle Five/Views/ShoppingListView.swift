@@ -100,23 +100,28 @@ struct ShoppingListView: View {
     }
     
     func productCategorySection(_ category: String) -> some View {
-        Section(header: Text(category)
-                    .font(Font.custom("Parclo Serif Black", size: 22))
-                    .foregroundColor(Color.systemFontColor)
-                    .padding(.vertical, 10)
-                    .padding(.leading, 20)) {
-            
-            let sortedProducts = (shoppingList.products[category] ?? []).sorted {
-                let productName1 = extractProductName(from: $0.name)
-                let productName2 = extractProductName(from: $1.name)
-                return productName1 < productName2
-            }
-            
-            ForEach(sortedProducts, id: \.id) { product in
-                productButton(product)
-            }
-                        
-            .padding(.horizontal, 15)
+        let sortedProducts = (shoppingList.products[category] ?? []).sorted {
+            let productName1 = extractProductName(from: $0.name)
+            let productName2 = extractProductName(from: $1.name)
+            return productName1 < productName2
+        }
+        if !sortedProducts.isEmpty {
+            return AnyView(
+                Section(header: Text(category)
+                            .font(Font.custom("Parclo Serif Black", size: 22))
+                            .foregroundColor(Color.systemFontColor)
+                            .padding(.vertical, 10)
+                            .padding(.leading, 20)) {
+                    
+                    ForEach(sortedProducts, id: \.id) { product in
+                        productButton(product)
+                    }
+                                
+                    .padding(.horizontal, 15)
+                }
+            )
+        } else {
+            return AnyView(EmptyView())
         }
     }
     

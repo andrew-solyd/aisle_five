@@ -50,3 +50,13 @@ func tester() {
     }
     
 }
+
+func shoppingListToString(_ shoppingList: ShoppingList) -> String {
+    var productNames: [String] = []
+    for (_, products) in shoppingList.products {
+        for product in products {
+            productNames.append(product.name)
+        }
+    }
+    return "User's shopping list contains \(productNames.joined(separator: ", "))"
+}
